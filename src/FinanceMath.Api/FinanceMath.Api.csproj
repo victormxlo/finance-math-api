@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinanceMath.Application\FinanceMath.Application.csproj" />
+    <ProjectReference Include="..\FinanceMath.Infrastructure\FinanceMath.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

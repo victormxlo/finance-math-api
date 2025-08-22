@@ -1,5 +1,5 @@
 ﻿using FinanceMath.Application.Users.Dtos;
-using FinanceMath.Domain.Users;
+using FinanceMath.Domain.Entities.Users;
 using MediatR;
 
 namespace FinanceMath.Application.Users.Commands.RegisterUser

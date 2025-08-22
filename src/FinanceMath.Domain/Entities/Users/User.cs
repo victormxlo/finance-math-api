@@ -1,4 +1,4 @@
-﻿namespace FinanceMath.Domain.Users
+﻿namespace FinanceMath.Domain.Entities.Users
 {
     public class User
     {
