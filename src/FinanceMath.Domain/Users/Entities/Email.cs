@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace FinanceMath.Domain.Entities.Users
+namespace FinanceMath.Domain.Users.Entities
 {
     public class Email
     {

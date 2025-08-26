@@ -1,5 +1,5 @@
-﻿using FinanceMath.Domain.Entities.Users;
-using FinanceMath.Domain.Repositories;
+﻿using FinanceMath.Domain.Repositories;
+using FinanceMath.Domain.Users.Entities;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -21,10 +21,14 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             await transaction.CommitAsync();
         }
 
+        public async Task<User?> GetByEmailAsync(string email)
+            => await _session.Query<User>()
+                .FirstOrDefaultAsync(u => u.Email.Value == email);
+
         public async Task<User?> GetByIdAsync(Guid id)
             => await _session.GetAsync<User>(id);
 
-        public async Task<User?> GetByUsername(string username)
+        public async Task<User?> GetByUsernameAsync(string username)
             => await _session.Query<User>()
                 .FirstOrDefaultAsync(u => u.Username == username);
     }

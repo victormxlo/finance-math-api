@@ -1,4 +1,4 @@
-﻿using FinanceMath.Domain.Entities.Users;
+﻿using FinanceMath.Domain.Users.Entities;
 
 namespace FinanceMath.Domain.Repositories
 {
@@ -6,6 +6,7 @@ namespace FinanceMath.Domain.Repositories
     {
         Task AddAsync(User entity);
         Task<User?> GetByIdAsync(Guid id);
-        Task<User?> GetByUsername(string username);
+        Task<User?> GetByUsernameAsync(string username);
+        Task<User?> GetByEmailAsync(string email);
     }
 }

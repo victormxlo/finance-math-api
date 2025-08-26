@@ -1,4 +1,4 @@
-﻿using FinanceMath.Domain.Entities.Users;
+﻿using FinanceMath.Domain.Users.Entities;
 using FluentNHibernate.Mapping;
 
 namespace FinanceMath.Infrastructure.Persistence.Mappings
@@ -13,6 +13,10 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Map(x => x.FullName).Not.Nullable();
             Component(x => x.Email, m => m.Map(e => e.Value).Column("email").Not.Nullable());
             Map(x => x.PasswordHash).Not.Nullable();
+            Map(x => x.Type)
+                .CustomType<int>()
+                .Column("type_id")
+                .Not.Nullable();
             Map(x => x.CreatedAt).Not.Nullable();
             Map(x => x.UpdatedAt);
         }
