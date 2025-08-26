@@ -1,6 +1,7 @@
+using FinanceMath.Application;
 using FinanceMath.Application.Users.Commands.RegisterUser;
 using FinanceMath.Application.Users.Queries.GetUserById;
-using FinanceMath.Infrastructure.Data;
+using FinanceMath.Infrastructure;
 
 internal class Program
 {
@@ -12,6 +13,13 @@ internal class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+
+        #region Dependency Injection
+        builder.Services
+            .AddApplication()
+            .AddInfrastructure(builder.Configuration);
+        #endregion
+
         builder.Services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(RegisterUserHandler).Assembly));
 
@@ -22,12 +30,6 @@ internal class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        var sessionFactory = NHibernateHelper.CreateSessionFactory(
-            builder.Configuration.GetConnectionString("FinanceMathDb"));
-
-        builder.Services.AddSingleton(sessionFactory);
-        builder.Services.AddScoped(factory => sessionFactory.OpenSession());
 
         var app = builder.Build();
 
