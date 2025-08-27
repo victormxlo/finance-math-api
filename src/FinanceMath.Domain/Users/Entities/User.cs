@@ -4,10 +4,6 @@ namespace FinanceMath.Domain.Users.Entities
 {
     public class User
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-        protected User() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-
         public virtual Guid Id { get; protected set; }
         public virtual string Username { get; protected set; }
         public virtual string FullName { get; protected set; }
@@ -16,6 +12,8 @@ namespace FinanceMath.Domain.Users.Entities
         public virtual UserType Type { get; protected set; }
         public virtual DateTime CreatedAt { get; protected set; }
         public virtual DateTime? UpdatedAt { get; protected set; }
+
+        protected User() { }
 
         public User(string username, string fullName, Email email, string passwordHash, UserType type)
         {
@@ -28,7 +26,7 @@ namespace FinanceMath.Domain.Users.Entities
             CreatedAt = DateTime.Now;
         }
 
-        public void UpdateUsername(string newUsername)
+        public virtual void UpdateUsername(string newUsername)
         {
             if (string.IsNullOrEmpty(newUsername))
                 throw new ArgumentException("Username cannot be empty.");
@@ -37,7 +35,7 @@ namespace FinanceMath.Domain.Users.Entities
             UpdatedAt = DateTime.Now;
         }
 
-        public void ChangePassword(string passwordHash)
+        public virtual void ChangePassword(string passwordHash)
         {
             PasswordHash = passwordHash;
             UpdatedAt = DateTime.Now;

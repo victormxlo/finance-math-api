@@ -10,7 +10,9 @@ namespace FinanceMath.Infrastructure.Data
         public static ISessionFactory CreateSessionFactory(string connectionString)
         {
             return Fluently.Configure()
-                .Database(PostgreSQLConfiguration.Standard.ConnectionString(connectionString))
+                .Database(PostgreSQLConfiguration.Standard
+                    .ConnectionString(connectionString)
+                    .Dialect<NHibernate.Dialect.PostgreSQLDialect>())
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserMap>())
                 .BuildSessionFactory();
         }

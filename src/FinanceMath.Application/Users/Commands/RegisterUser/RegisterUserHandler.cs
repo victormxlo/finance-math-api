@@ -11,11 +11,16 @@ namespace FinanceMath.Application.Users.Commands.RegisterUser
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtProvider _jwtProvider;
 
-        public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public RegisterUserHandler(
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher,
+            IJwtProvider jwtProvider)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _jwtProvider = jwtProvider;
         }
 
         public async Task<Result<UserDto>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -30,8 +35,10 @@ namespace FinanceMath.Application.Users.Commands.RegisterUser
             var hashedPassword = _passwordHasher.Hash(data.Password);
 
             var email = new Email(data.Email);
-            var user = new User(data.Username, data.FullName, email, data.Password, UserType.Student);
+            var user = new User(data.Username, data.FullName, email, hashedPassword, UserType.Student);
             await _userRepository.AddAsync(user);
+
+            var token = _jwtProvider.GenerateToken(user);
 
             var dto = new UserDto
             {
@@ -39,7 +46,8 @@ namespace FinanceMath.Application.Users.Commands.RegisterUser
                 Username = user.Username,
                 FullName = user.FullName,
                 Email = user.Email.Value,
-                CreatedAt = user.CreatedAt
+                CreatedAt = user.CreatedAt,
+                Token = token
             };
 
             return Result<UserDto>.Ok(dto);

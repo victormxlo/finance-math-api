@@ -4,7 +4,9 @@ namespace FinanceMath.Domain.Users.Entities
 {
     public class Email
     {
-        public string Value { get; private set; }
+        public string Value { get; protected set; }
+
+        protected Email() { }
 
         public Email(string value)
         {

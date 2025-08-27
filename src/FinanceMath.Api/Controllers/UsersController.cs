@@ -1,3 +1,4 @@
+using FinanceMath.Application.Users.Commands.LoginUser;
 using FinanceMath.Application.Users.Commands.RegisterUser;
 using FinanceMath.Application.Users.Queries.GetUserById;
 using FinanceMath.Application.Users.Requests;
@@ -27,8 +28,19 @@ namespace FinanceMath.Api.Controllers
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { id = result.Value.Id },
+                new { id = result.Value!.Id },
                 result.Value);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
+        {
+            var result = await _mediator.Send(new LoginUserCommand { Request = request });
+
+            if (!result.Success)
+                return Unauthorized(new { error = result.Error });
+
+            return Ok(result.Value);
         }
 
         [HttpGet("{id:guid}")]
