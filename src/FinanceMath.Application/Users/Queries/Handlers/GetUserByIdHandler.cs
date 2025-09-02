@@ -3,7 +3,7 @@ using FinanceMath.Application.Users.Dtos;
 using FinanceMath.Domain.Repositories;
 using MediatR;
 
-namespace FinanceMath.Application.Users.Queries.GetUserById
+namespace FinanceMath.Application.Users.Queries.Handlers
 {
     public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Result<UserDto>>
     {

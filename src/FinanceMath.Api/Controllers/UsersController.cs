@@ -1,4 +1,4 @@
-using FinanceMath.Application.Users.Queries.GetUserById;
+using FinanceMath.Application.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

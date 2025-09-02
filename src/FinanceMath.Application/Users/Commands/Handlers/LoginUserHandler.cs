@@ -3,7 +3,7 @@ using FinanceMath.Application.Users.Dtos;
 using FinanceMath.Domain.Repositories;
 using MediatR;
 
-namespace FinanceMath.Application.Users.Commands.LoginUser
+namespace FinanceMath.Application.Users.Commands.Handlers
 {
     public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<UserDto>>
     {

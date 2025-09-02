@@ -29,10 +29,11 @@
             CreatedAt = DateTime.UtcNow;
         }
 
-        public virtual void Update(string title, string body, string? mediaUrl = null)
+        public virtual void Update(string title, string body, Guid categoryId, string? mediaUrl = null)
         {
             Title = title;
             Body = body;
+            CategoryId = categoryId;
             MediaUrl = mediaUrl;
             UpdatedAt = DateTime.UtcNow;
         }

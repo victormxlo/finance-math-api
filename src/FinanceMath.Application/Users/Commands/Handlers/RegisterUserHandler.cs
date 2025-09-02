@@ -5,7 +5,7 @@ using FinanceMath.Domain.Users.Entities;
 using FinanceMath.Domain.Users.Enums;
 using MediatR;
 
-namespace FinanceMath.Application.Users.Commands.RegisterUser
+namespace FinanceMath.Application.Users.Commands.Handlers
 {
     public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<UserDto>>
     {

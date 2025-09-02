@@ -1,5 +1,4 @@
-using FinanceMath.Application.Users.Commands.LoginUser;
-using FinanceMath.Application.Users.Commands.RegisterUser;
+using FinanceMath.Application.Users.Commands;
 using FinanceMath.Application.Users.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

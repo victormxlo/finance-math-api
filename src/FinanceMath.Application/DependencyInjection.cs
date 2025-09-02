@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace FinanceMath.Application
 {
@@ -8,7 +7,11 @@ namespace FinanceMath.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddMediatR(c =>
-                c.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            {
+                c.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
+            });
+
+            services.AddAutoMapper(typeof(ApplicationAssemblyMarker).Assembly);
 
             return services;
         }
