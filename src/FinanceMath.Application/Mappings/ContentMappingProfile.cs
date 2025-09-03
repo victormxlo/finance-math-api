@@ -8,8 +8,7 @@ namespace FinanceMath.Application.Mappings
     {
         public ContentMappingProfile()
         {
-            CreateMap<Content, ContentDto>();
-            CreateMap<ContentDto, Content>();
+            CreateMap<Content, ContentDto>().ReverseMap();
         }
     }
 }

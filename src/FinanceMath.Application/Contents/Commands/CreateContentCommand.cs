@@ -3,7 +3,7 @@ using MediatR;
 
 namespace FinanceMath.Application.Contents.Commands
 {
-    public class SaveContentCommand : IRequest<Result<ContentDto>>
+    public class CreateContentCommand : IRequest<Result<ContentDto>>
     {
         public string Title { get; set; } = null!;
         public string Body { get; set; } = null!;

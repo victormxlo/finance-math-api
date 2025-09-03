@@ -16,8 +16,4 @@
     <ProjectReference Include="..\FinanceMath.Domain\FinanceMath.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contents\Requests\" />
-  </ItemGroup>
-
 </Project>

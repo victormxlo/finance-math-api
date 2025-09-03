@@ -6,18 +6,18 @@ using MediatR;
 
 namespace FinanceMath.Application.Contents.Commands.Handlers
 {
-    public class SaveContentHandler : IRequestHandler<SaveContentCommand, Result<ContentDto>>
+    public class CreateContentHandler : IRequestHandler<CreateContentCommand, Result<ContentDto>>
     {
         private readonly IContentRepository _contentRepository;
         private readonly IMapper _mapper;
 
-        public SaveContentHandler(IContentRepository repository, IMapper mapper)
+        public CreateContentHandler(IContentRepository repository, IMapper mapper)
         {
             _contentRepository = repository;
             _mapper = mapper;
         }
 
-        public async Task<Result<ContentDto>> Handle(SaveContentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ContentDto>> Handle(CreateContentCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace FinanceMath.Application.Contents.Commands.Handlers
             }
             catch (Exception ex)
             {
-                return Result<ContentDto>.Fail($"Failed to save content: {ex.Message}");
+                return Result<ContentDto>.Fail($"Failed to create content: {ex.Message}.");
             }
         }
     }
