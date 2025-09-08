@@ -41,7 +41,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.Sections)
-                .KeyColumn("category_id")
+                .KeyColumn("content_id")
                 .Inverse()
                 .Cascade.AllDeleteOrphan();
         }

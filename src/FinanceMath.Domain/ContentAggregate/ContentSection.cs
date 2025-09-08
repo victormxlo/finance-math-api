@@ -18,5 +18,18 @@
             Order = order;
             Content = content ?? throw new ArgumentNullException(nameof(content));
         }
+
+        public virtual void Update(string title, string body, int order)
+        {
+            if (!string.IsNullOrEmpty(title))
+                Title = title;
+
+            if (!string.IsNullOrEmpty(body))
+                Body = body;
+
+            if (order != default && order != Order)
+                Order = order;
+
+        }
     }
 }

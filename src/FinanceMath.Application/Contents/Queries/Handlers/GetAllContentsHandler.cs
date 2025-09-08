@@ -18,14 +18,21 @@ namespace FinanceMath.Application.Contents.Queries.Handlers
 
         public async Task<Result<ICollection<ContentDto>>> Handle(GetAllContentsQuery request, CancellationToken cancellationToken)
         {
-            var contents = await _contentRepository.GetAllAsync();
+            try
+            {
+                var contents = await _contentRepository.GetAllAsync();
 
-            if (contents == null || contents?.Count == 0)
-                return Result<ICollection<ContentDto>>.Fail("No content found.");
+                if (contents == null || contents?.Count == 0)
+                    return Result<ICollection<ContentDto>>.Fail("No content found.");
 
-            var dtos = _mapper.Map<ICollection<ContentDto>>(contents);
+                var dtos = _mapper.Map<ICollection<ContentDto>>(contents);
 
-            return Result<ICollection<ContentDto>>.Ok(dtos);
+                return Result<ICollection<ContentDto>>.Ok(dtos);
+            }
+            catch (Exception ex)
+            {
+                return Result<ICollection<ContentDto>>.Fail($"Failed to get all contents {ex.Message}.");
+            }
         }
     }
 }
