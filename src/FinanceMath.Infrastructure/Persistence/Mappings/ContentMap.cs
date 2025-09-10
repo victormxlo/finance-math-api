@@ -13,20 +13,22 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .GeneratedBy.GuidComb();
             Map(x => x.Title)
                 .Not.Nullable();
+
             Map(x => x.Body)
                 .CustomSqlType("text")
                 .Not.Nullable();
+
             Map(x => x.MediaUrl)
                 .Column("media_url");
-            Map(x => x.CategoryId)
-                .Column("category_id")
-                .Not.Nullable();
+
             Map(x => x.CreatedBy)
                 .Column("created_by")
                 .Not.Nullable();
+
             Map(x => x.CreatedAt)
                 .Column("created_at")
                 .Not.Nullable();
+
             Map(x => x.UpdatedAt)
                 .Column("updated_at");
 
@@ -35,7 +37,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Not.Nullable()
                 .Cascade.None();
 
-            HasMany(x => x.Exercises)
+            HasMany(x => x.ContentExercises)
                 .KeyColumn("content_id")
                 .Inverse()
                 .Cascade.AllDeleteOrphan();

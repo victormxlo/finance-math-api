@@ -9,11 +9,13 @@ namespace FinanceMath.Application.Contents.Commands.Handlers
     public class CreateContentHandler : IRequestHandler<CreateContentCommand, Result<ContentDto>>
     {
         private readonly IContentRepository _contentRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CreateContentHandler(IContentRepository repository, IMapper mapper)
+        public CreateContentHandler(IContentRepository repository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _contentRepository = repository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -21,8 +23,13 @@ namespace FinanceMath.Application.Contents.Commands.Handlers
         {
             try
             {
+                var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+
+                if (category == null)
+                    return Result<ContentDto>.Fail($"No category found with id: {request.CategoryId}.");
+
                 var content = new Content(
-                    title: request.Title, body: request.Body, categoryId: request.CategoryId,
+                    title: request.Title, body: request.Body, category: category,
                     createdBy: request.CreatedBy, mediaUrl: request.MediaUrl);
 
                 await _contentRepository.SaveAsync(content);

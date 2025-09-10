@@ -18,14 +18,14 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             => await _session.Query<Content>()
                 .Fetch(c => c.Category)
                 .FetchMany(c => c.Sections)
-                .FetchMany(c => c.Exercises)
+                .FetchMany(c => c.ContentExercises)
                 .ToListAsync();
 
         public async Task<Content?> GetByIdAsync(Guid id)
             => await _session.Query<Content>()
                 .Fetch(c => c.Category)
                 .FetchMany(c => c.Sections)
-                .FetchMany(c => c.Exercises)
+                .FetchMany(c => c.ContentExercises)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task SaveAsync(Content content)

@@ -8,11 +8,13 @@ namespace FinanceMath.Application.Contents.Commands.Handlers
     public class UpdateContentHandler : IRequestHandler<UpdateContentCommand, Result<ContentDto>>
     {
         private readonly IContentRepository _contentRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public UpdateContentHandler(IContentRepository repository, IMapper mapper)
+        public UpdateContentHandler(IContentRepository repository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _contentRepository = repository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -25,7 +27,12 @@ namespace FinanceMath.Application.Contents.Commands.Handlers
                 if (content == null)
                     return Result<ContentDto>.Fail($"No content found with id: {request.Id}.");
 
-                content.Update(request.Title, request.Body, request.CategoryId, request.MediaUrl);
+                var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+
+                if (category == null)
+                    return Result<ContentDto>.Fail($"No category found with id: {request.CategoryId}.");
+
+                content.Update(request.Title, request.Body, category, request.MediaUrl);
 
                 await _contentRepository.UpdateAsync(content);
 

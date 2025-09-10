@@ -3,30 +3,27 @@ using FluentNHibernate.Mapping;
 
 namespace FinanceMath.Infrastructure.Persistence.Mappings
 {
-    public class ContentSectionMap : ClassMap<ContentSection>
+    public class ExerciseHintMap : ClassMap<ExerciseHint>
     {
-        public ContentSectionMap()
+        public ExerciseHintMap()
         {
-            Table("content_sections");
+            Table("exercise_hints");
 
             Id(x => x.Id)
                 .GeneratedBy.GuidComb();
 
-            Map(x => x.Title)
-               .Not.Nullable();
+            References(x => x.Exercise)
+                .Column("exercise_id")
+                .Not.Nullable()
+                .Cascade.None();
 
-            Map(x => x.Body)
+            Map(x => x.Description)
                 .CustomSqlType("text")
                 .Not.Nullable();
 
             Map(x => x.Order)
                 .Column("sort_order")
                 .Not.Nullable();
-
-            References(x => x.Content)
-                .Column("content_id")
-                .Not.Nullable()
-                .Cascade.None();
         }
     }
 }
