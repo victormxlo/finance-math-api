@@ -15,6 +15,7 @@ namespace FinanceMath.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IContentRepository, ContentRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IExerciseRepository, ExerciseRepository>();
             services.AddScoped<IContentSectionRepository, ContentSectionRepository>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddSingleton<IJwtProvider, JwtProvider>();

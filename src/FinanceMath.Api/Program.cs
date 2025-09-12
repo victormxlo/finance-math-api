@@ -1,3 +1,4 @@
+using FinanceMath.Api;
 using FinanceMath.Application;
 using FinanceMath.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +18,7 @@ internal class Program
 
         #region Dependency Injection
         builder.Services
+            .AddApi()
             .AddApplication()
             .AddInfrastructure(builder.Configuration);
         #endregion

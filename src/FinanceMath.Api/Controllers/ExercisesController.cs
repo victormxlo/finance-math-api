@@ -1,3 +1,6 @@
+using AutoMapper;
+using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Api.Contracts.Responses;
 using FinanceMath.Application.Exercises.Commands;
 using FinanceMath.Application.Exercises.Queries;
 using MediatR;
@@ -12,10 +15,12 @@ namespace FinanceMath.Api.Controllers
     public class ExercisesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ExercisesController(IMediator mediator)
+        public ExercisesController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -71,6 +76,21 @@ namespace FinanceMath.Api.Controllers
                 return BadRequest(new { error = result.Error });
 
             return NoContent();
+        }
+
+        [HttpPost("{id:guid}")]
+        public async Task<IActionResult> ValidateAnswer(Guid id, ValidateExerciseAnswerRequest request)
+        {
+            var command = await _mediator
+                .Send(new ValidateExerciseAnswerCommand
+                { UserId = request.UserId, ExerciseId = id, ExerciseOptionId = request.ExerciseOptionId });
+
+            if (!command.Success)
+                return BadRequest(new { error = command.Error });
+
+            var response = _mapper.Map<ValidateExerciseAnswerResponse>(command.Value);
+
+            return Ok(response);
         }
     }
 }

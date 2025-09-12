@@ -1,3 +1,4 @@
+using FinanceMath.Api.Contracts.Requests;
 using FinanceMath.Application.Contents.Commands;
 using FinanceMath.Application.Contents.Queries;
 using FinanceMath.Application.ContentSections.Commands;
@@ -105,27 +106,38 @@ namespace FinanceMath.Api.Controllers
         }
 
         [HttpPost("{contentId:guid}/sections")]
-        public async Task<IActionResult> CreateContentSection(Guid contentId, [FromBody] CreateContentSectionCommand request)
+        public async Task<IActionResult> CreateContentSection(Guid contentId, [FromBody] CreateContentSectionRequest request)
         {
-            request.ContentId = contentId;
-            var result = await _mediator.Send(request);
+            var command = await _mediator.Send(new CreateContentSectionCommand
+            {
+                ContentId = contentId,
+                Title = request.Title,
+                Body = request.Body,
+                Order = request.Order
+            });
 
-            if (!result.Success)
-                return BadRequest(new { error = result.Error });
+            if (!command.Success)
+                return BadRequest(new { error = command.Error });
 
-            return Ok(result.Value);
+            return Ok(command.Value);
         }
 
         [HttpPatch("{contentId:guid}/sections")]
-        public async Task<IActionResult> UpdateContentSection(Guid contentId, [FromBody] UpdateContentSectionCommand request)
+        public async Task<IActionResult> UpdateContentSection(Guid contentId, [FromBody] UpdateContentSectionRequest request)
         {
-            request.ContentId = contentId;
-            var result = await _mediator.Send(request);
+            var command = await _mediator.Send(new UpdateContentSectionCommand
+            {
+                ContentId = contentId,
+                ContentSectionId = request.ContentSectionId,
+                Title = request.Title,
+                Body = request.Body,
+                Order = request.Order
+            });
 
-            if (!result.Success)
-                return BadRequest(new { error = result.Error });
+            if (!command.Success)
+                return BadRequest(new { error = command.Error });
 
-            return Ok(result.Value);
+            return Ok(command.Value);
         }
 
         [HttpDelete("{contentId:guid}/sections/{sectionId:guid}")]
