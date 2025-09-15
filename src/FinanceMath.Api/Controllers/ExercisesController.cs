@@ -23,6 +23,7 @@ namespace FinanceMath.Api.Controllers
             _mapper = mapper;
         }
 
+        #region Exercises
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -92,5 +93,32 @@ namespace FinanceMath.Api.Controllers
 
             return Ok(response);
         }
+        #endregion
+
+        #region Hints
+        [HttpGet("{id:guid}/hints")]
+        public async Task<IActionResult> GetHintsByExerciseId(Guid id)
+        {
+            var result = await _mediator.Send(new GetHintsByExerciseIdQuery { Id = id });
+
+            if (!result.Success)
+                return NotFound();
+
+            return Ok(result.Value);
+        }
+        #endregion
+
+        #region Explanation
+        [HttpGet("{id:guid}/explanation")]
+        public async Task<IActionResult> GetExplanationByExerciseId(Guid id)
+        {
+            var result = await _mediator.Send(new GetExplanationByExerciseIdQuery { Id = id });
+
+            if (!result.Success)
+                return NotFound();
+
+            return Ok(result.Value);
+        }
+        #endregion
     }
 }

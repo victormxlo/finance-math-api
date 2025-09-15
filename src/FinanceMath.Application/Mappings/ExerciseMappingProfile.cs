@@ -9,7 +9,7 @@ namespace FinanceMath.Application.Mappings
         public ExerciseMappingProfile()
         {
             CreateMap<Exercise, ExerciseDto>()
-                .ForMember(d => d.Options,
+                .ForMember(dest => dest.Options,
                     opt => opt.MapFrom(src => src.Options.OrderBy(o => o.Order)))
                 .ForMember(dest => dest.ContentIds,
                     opt => opt.MapFrom(src => src.ContentExercises.Select(ce => ce.Id)))
@@ -19,6 +19,10 @@ namespace FinanceMath.Application.Mappings
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Description))
                 .ForMember(d => d.Order, opt => opt.MapFrom(s => s.Order));
 
+            CreateMap<ExerciseHint, ExerciseHintDto>()
+                .ForMember(dest => dest.ExerciseId,
+                    opt => opt.MapFrom(src => src.Exercise.Id))
+                .ReverseMap();
         }
     }
 }
