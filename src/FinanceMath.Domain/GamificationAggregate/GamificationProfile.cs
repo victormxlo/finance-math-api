@@ -1,24 +1,26 @@
-﻿namespace FinanceMath.Domain.GamificationAggregate
+﻿using FinanceMath.Domain.Users.Entities;
+
+namespace FinanceMath.Domain.GamificationAggregate
 {
     public class GamificationProfile
     {
         public virtual Guid Id { get; protected set; }
-        public virtual Guid UserId { get; protected set; }
+        public virtual User User { get; protected set; }
 
         public virtual int ExperiencePoints { get; protected set; }
         public virtual int VirtualCurrency { get; protected set; }
-        public virtual int CurrentStreakDays { get; protected set; }
         public virtual int LevelId { get; protected set; }
+        public virtual int CurrentStreakDays { get; protected set; }
         public virtual DateTime? LastActivityDate { get; protected set; }
 
         public virtual ICollection<AchievementProgress> Achievements { get; protected set; } = new List<AchievementProgress>();
 
         protected GamificationProfile() { }
 
-        public GamificationProfile(Guid userId)
+        public GamificationProfile(User user)
         {
             Id = Guid.NewGuid();
-            UserId = userId;
+            User = user;
             ExperiencePoints = 0;
             VirtualCurrency = 0;
             LevelId = 1;
@@ -47,8 +49,8 @@
 
         public virtual void AddAchievement(Achievement achievement)
         {
-            if (!Achievements.Any(a => a.AchievementId == achievement.Id))
-                Achievements.Add(new AchievementProgress(achievement.Id, DateTime.UtcNow));
+            if (!Achievements.Any(a => a.Achievement.Id == achievement.Id))
+                Achievements.Add(new AchievementProgress(this, achievement, DateTime.UtcNow));
         }
     }
 }

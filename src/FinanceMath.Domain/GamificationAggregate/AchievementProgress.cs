@@ -2,14 +2,16 @@
 {
     public class AchievementProgress
     {
-        public virtual Guid AchievementId { get; protected set; }
+        public virtual GamificationProfile GamificationProfile { get; protected set; }
+        public virtual Achievement Achievement { get; protected set; }
         public virtual DateTime UnlockedAt { get; protected set; }
 
         protected AchievementProgress() { }
 
-        public AchievementProgress(Guid achievementId, DateTime unlockedAt)
+        public AchievementProgress(GamificationProfile gamificationProfile, Achievement achievement, DateTime unlockedAt)
         {
-            AchievementId = achievementId;
+            GamificationProfile = gamificationProfile;
+            Achievement = achievement;
             UnlockedAt = unlockedAt;
         }
     }

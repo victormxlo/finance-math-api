@@ -11,6 +11,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Id(x => x.Id)
                 .CustomSqlType("uuid")
                 .GeneratedBy.GuidComb();
+
             Map(x => x.Title)
                 .Not.Nullable();
 
