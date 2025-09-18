@@ -1,5 +1,6 @@
 using FinanceMath.Api;
 using FinanceMath.Application;
+using FinanceMath.Application.Settings;
 using FinanceMath.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +22,10 @@ internal class Program
             .AddApi()
             .AddApplication()
             .AddInfrastructure(builder.Configuration);
+
+        builder.Services.Configure<GamificationSettings>(
+            builder.Configuration.GetSection("Gamification"));
+
         #endregion
 
         builder.Services.AddControllers();

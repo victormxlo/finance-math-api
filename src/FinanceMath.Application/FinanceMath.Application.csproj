@@ -16,4 +16,9 @@
     <ProjectReference Include="..\FinanceMath.Domain\FinanceMath.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Gamification\Commands\" />
+    <Folder Include="Gamification\Queries\" />
+  </ItemGroup>
+
 </Project>
