@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinanceMath.Api.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class ContentsController : ControllerBase
     {

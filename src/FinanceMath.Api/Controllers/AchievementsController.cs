@@ -1,5 +1,4 @@
-using FinanceMath.Application.Categories.Commands;
-using FinanceMath.Application.Categories.Queries;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +8,21 @@ namespace FinanceMath.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class CategoriesController : ControllerBase
+    public class AchievementsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(IMediator mediator)
+        public AchievementsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllCategoriesQuery());
+            var result = await _mediator.Send(new GetAllAchievementsQuery());
 
             if (!result.Success)
                 return NotFound();
@@ -32,7 +33,8 @@ namespace FinanceMath.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _mediator.Send(new GetCategoryByIdQuery { Id = id });
+            var result = await _mediator
+                .Send(new GetAchievementByIdQuery { Id = id });
 
             if (!result.Success)
                 return NotFound();
@@ -41,7 +43,7 @@ namespace FinanceMath.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCategoryCommand request)
+        public async Task<IActionResult> Create([FromBody] CreateAchievementCommand request)
         {
             var result = await _mediator.Send(request);
 
@@ -51,10 +53,13 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Update([FromBody] UpdateCategoryCommand request)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAchievementRequest request)
         {
-            var result = await _mediator.Send(request);
+            var command = _mapper.Map<UpdateAchievementCommand>(request);
+            command.Id = id;
+
+            var result = await _mediator.Send(command);
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });
@@ -65,12 +70,13 @@ namespace FinanceMath.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _mediator.Send(new DeleteCategoryCommand { Id = id });
+            var result = await _mediator
+                .Send(new DeleteAchievementByIdCommand { Id = id });
 
             if (!result.Success)
-                return BadRequest(new { error = result.Error });
+                return NotFound();
 
-            return NoContent();
+            return Ok(result.Value);
         }
     }
 }
