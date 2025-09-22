@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using FinanceMath.Application.Gamification.Dtos;
+using FinanceMath.Application.Gamification.Challenges.Dtos;
+using FinanceMath.Application.Gamification.Leaderboards.Dtos;
+using FinanceMath.Application.Gamification.Profiles.Dtos;
 using FinanceMath.Application.Interfaces;
 using FinanceMath.Application.Settings;
 using FinanceMath.Domain.GamificationAggregate;
@@ -47,12 +49,13 @@ namespace FinanceMath.Infrastructure.Services
         public async Task EnsureProfileExistsAsync(Guid userId)
         {
             var profile = await _profileRepository.GetByUserIdAsync(userId);
+            var level = await _levelRepository.GetByIdAsync(1);
             if (profile == null)
             {
                 var user = await _userRepository.GetByIdAsync(userId)
                     ?? throw new InvalidOperationException($"User {userId} not found when creating gamification profile.");
 
-                profile = new GamificationProfile(user);
+                profile = new GamificationProfile(user, level);
                 await _profileRepository.AddAsync(profile);
                 _logger.LogInformation("Created gamification profile for user {UserId}", userId);
             }

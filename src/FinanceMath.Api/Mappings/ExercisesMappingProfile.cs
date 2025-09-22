@@ -1,6 +1,6 @@
 using AutoMapper;
 using FinanceMath.Api.Contracts.Responses;
-using FinanceMath.Application.Exercises.Dtos;
+using FinanceMath.Application.Content.Exercises.Dtos;
 
 namespace FinanceMath.Api.Mappings
 {

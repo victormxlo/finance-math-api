@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FinanceMath.Application.Exercises.Dtos;
+using FinanceMath.Application.Content.Exercises.Dtos;
 using FinanceMath.Domain.ContentAggregate;
 
 namespace FinanceMath.Application.Mappings

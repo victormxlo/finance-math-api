@@ -1,5 +1,5 @@
-using FinanceMath.Application.Categories.Commands;
 using FinanceMath.Application.Categories.Queries;
+using FinanceMath.Application.Content.Categories.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

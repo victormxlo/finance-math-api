@@ -1,4 +1,6 @@
-﻿using FinanceMath.Application.Gamification.Dtos;
+﻿using FinanceMath.Application.Gamification.Challenges.Dtos;
+using FinanceMath.Application.Gamification.Leaderboards.Dtos;
+using FinanceMath.Application.Gamification.Profiles.Dtos;
 
 namespace FinanceMath.Application.Interfaces
 {

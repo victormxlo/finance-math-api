@@ -1,6 +1,7 @@
 using AutoMapper;
 using FinanceMath.Api.Contracts.Requests;
 using FinanceMath.Api.Contracts.Responses;
+using FinanceMath.Application.Content.Exercises.Commands;
 using FinanceMath.Application.Exercises.Commands;
 using FinanceMath.Application.Exercises.Queries;
 using MediatR;
