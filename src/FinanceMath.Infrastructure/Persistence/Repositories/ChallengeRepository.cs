@@ -14,7 +14,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
-        public async Task<ICollection<Challenge>> GetActiveChallengesAsync()
+        public async Task<ICollection<Challenge>> GetActivesAsync()
         {
             var now = DateTime.UtcNow;
             return await _session.Query<Challenge>()

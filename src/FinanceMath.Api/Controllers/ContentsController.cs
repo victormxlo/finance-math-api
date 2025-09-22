@@ -1,8 +1,8 @@
 using FinanceMath.Api.Contracts.Requests;
-using FinanceMath.Application.Contents.Commands;
-using FinanceMath.Application.Contents.Queries;
-using FinanceMath.Application.ContentSections.Commands;
-using FinanceMath.Application.ContentSections.Queries;
+using FinanceMath.Application.Content.Contents.Commands;
+using FinanceMath.Application.Content.Contents.Queries;
+using FinanceMath.Application.Content.ContentSections.Commands;
+using FinanceMath.Application.Content.ContentSections.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

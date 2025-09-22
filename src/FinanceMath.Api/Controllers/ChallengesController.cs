@@ -1,4 +1,6 @@
 using AutoMapper;
+using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Application.Gamification.Challenges.Commands;
 using FinanceMath.Application.Gamification.Challenges.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -83,7 +85,7 @@ namespace FinanceMath.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _mediator
-                .Send(new DeleteChallengeByIdCommand { Id = id });
+                .Send(new DeleteChallengeCommand { Id = id });
 
             if (!result.Success)
                 return NotFound();
@@ -95,7 +97,7 @@ namespace FinanceMath.Api.Controllers
         public async Task<IActionResult> Complete(Guid id, [FromBody] CompleteChallengeRequest request)
         {
             var command = _mapper.Map<CompleteChallengeCommand>(request);
-            command.Id = id;
+            command.ChallengeId = id;
 
             var result = await _mediator.Send(command);
 

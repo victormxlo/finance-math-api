@@ -195,7 +195,7 @@ namespace FinanceMath.Infrastructure.Services
 
         public async Task<ICollection<ChallengeDto>> GetActiveChallengesAsync()
         {
-            var challenges = await _challengeRepository.GetActiveChallengesAsync();
+            var challenges = await _challengeRepository.GetActivesAsync();
 
             return _mapper.Map<ICollection<ChallengeDto>>(challenges);
         }

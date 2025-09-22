@@ -4,7 +4,7 @@ namespace FinanceMath.Domain.Repositories
 {
     public interface IChallengeRepository
     {
-        Task<ICollection<Challenge>> GetActiveChallengesAsync();
+        Task<ICollection<Challenge>> GetActivesAsync();
         Task<Challenge> GetByIdAsync(Guid id);
         Task<ICollection<Challenge>> GetAllAsync();
         Task SaveAsync(Challenge challenge);

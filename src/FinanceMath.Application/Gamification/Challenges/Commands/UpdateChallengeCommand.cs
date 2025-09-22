@@ -1,6 +1,9 @@
-﻿namespace FinanceMath.Application.Gamification.Challenges.Dtos
+﻿using FinanceMath.Application.Gamification.Challenges.Dtos;
+using MediatR;
+
+namespace FinanceMath.Application.Gamification.Challenges.Commands
 {
-    public class ChallengeDto
+    public class UpdateChallengeCommand : IRequest<Result<ChallengeDto>>
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
@@ -10,6 +13,5 @@
         public int VirtualCurrencyReward { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime CreatedAt { get; set; }
     }
 }

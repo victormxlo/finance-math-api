@@ -1,8 +1,7 @@
-﻿namespace FinanceMath.Application.Gamification.Challenges.Dtos
+namespace FinanceMath.Api.Contracts.Requests
 {
-    public class ChallengeDto
+    public class UpdateChallengeRequest
     {
-        public Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required string CriteriaKey { get; set; }
@@ -10,6 +9,5 @@
         public int VirtualCurrencyReward { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime CreatedAt { get; set; }
     }
 }

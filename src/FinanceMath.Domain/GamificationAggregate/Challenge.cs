@@ -28,5 +28,18 @@
             EndDate = endDate;
             CreatedAt = DateTime.UtcNow;
         }
+
+        public virtual void Update(
+            string name, string description, string criteriaKey,
+            int experienceReward, int virtualCurrencyReward, DateTime startDate, DateTime endDate)
+        {
+            Name = name;
+            Description = description;
+            CriteriaKey = criteriaKey;
+            ExperienceReward = experienceReward;
+            VirtualCurrencyReward = virtualCurrencyReward;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FinanceMath.Application.Content.Contents.Dtos;
-using FinanceMath.Domain.ContentAggregate;
 
 namespace FinanceMath.Application.Mappings
 {
@@ -8,7 +7,7 @@ namespace FinanceMath.Application.Mappings
     {
         public ContentMappingProfile()
         {
-            CreateMap<Content, ContentDto>().ReverseMap();
+            CreateMap<Domain.ContentAggregate.Content, ContentDto>().ReverseMap();
         }
     }
 }

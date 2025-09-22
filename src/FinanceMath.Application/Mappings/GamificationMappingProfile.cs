@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FinanceMath.Application.Gamification.Achievements.Dtos;
+using FinanceMath.Application.Gamification.Challenges.Dtos;
 using FinanceMath.Application.Gamification.Levels.Dtos;
 using FinanceMath.Application.Gamification.Profiles.Dtos;
 using FinanceMath.Domain.GamificationAggregate;
@@ -22,6 +23,9 @@ namespace FinanceMath.Application.Mappings
                 .ReverseMap();
 
             CreateMap<Achievement, AchievementDto>()
+                .ReverseMap();
+
+            CreateMap<Challenge, ChallengeDto>()
                 .ReverseMap();
         }
     }

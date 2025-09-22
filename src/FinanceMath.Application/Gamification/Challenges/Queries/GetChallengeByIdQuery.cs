@@ -3,8 +3,8 @@ using MediatR;
 
 namespace FinanceMath.Application.Gamification.Challenges.Queries
 {
-    public class GetAllChallengesQuery : IRequest<Result<ICollection<ChallengeDto>>>
+    public class GetChallengeByIdQuery : IRequest<Result<ChallengeDto>>
     {
-        public bool Active { get; set; } = false;
+        public Guid Id { get; set; }
     }
 }
