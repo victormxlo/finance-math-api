@@ -1,4 +1,5 @@
 using AutoMapper;
+using FinanceMath.Application.Gamification.Achievements.Commands;
 using FinanceMath.Application.Gamification.Levels.Commands;
 using FinanceMath.Application.Gamification.Profiles.Commands;
 
@@ -11,6 +12,8 @@ namespace FinanceMath.Api.Contracts.Requests
             CreateMap<UpdateGamificationProfileRequest, UpdateGamificationProfileCommand>();
 
             CreateMap<UpdateLevelRequest, UpdateLevelCommand>();
+
+            CreateMap<UpdateAchievementRequest, UpdateAchievementCommand>();
         }
     }
 }

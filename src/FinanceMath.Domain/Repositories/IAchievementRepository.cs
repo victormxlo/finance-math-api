@@ -9,5 +9,6 @@ namespace FinanceMath.Domain.Repositories
         Task<ICollection<Achievement>> GetAllAsync();
         Task SaveAsync(Achievement achievement);
         Task UpdateAsync(Achievement achievement);
+        Task DeleteAsync(Achievement achievement);
     }
 }

@@ -1,4 +1,7 @@
 using AutoMapper;
+using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Application.Gamification.Achievements.Commands;
+using FinanceMath.Application.Gamification.Achievements.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +74,7 @@ namespace FinanceMath.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _mediator
-                .Send(new DeleteAchievementByIdCommand { Id = id });
+                .Send(new DeleteAchievementCommand { Id = id });
 
             if (!result.Success)
                 return NotFound();

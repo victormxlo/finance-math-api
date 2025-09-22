@@ -23,5 +23,16 @@
             VirtualCurrencyReward = virtualCurrencyReward;
             CreatedAt = DateTime.UtcNow;
         }
+
+        public virtual void Update(
+            string name, string description, string criteriaKey,
+            int experienceReward, int virtualCurrencyReward)
+        {
+            Name = name;
+            Description = description;
+            CriteriaKey = criteriaKey;
+            ExperienceReward = experienceReward;
+            VirtualCurrencyReward = virtualCurrencyReward;
+        }
     }
 }

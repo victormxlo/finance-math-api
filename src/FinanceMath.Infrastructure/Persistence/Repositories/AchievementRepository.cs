@@ -37,16 +37,23 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
 
         public async Task SaveAsync(Achievement achievement)
         {
-            using var tx = _session.BeginTransaction();
+            using var transaction = _session.BeginTransaction();
             await _session.SaveAsync(achievement);
-            await tx.CommitAsync();
+            await transaction.CommitAsync();
         }
 
         public async Task UpdateAsync(Achievement achievement)
         {
-            using var tx = _session.BeginTransaction();
+            using var transaction = _session.BeginTransaction();
             await _session.UpdateAsync(achievement);
-            await tx.CommitAsync();
+            await transaction.CommitAsync();
+        }
+
+        public async Task DeleteAsync(Achievement achievement)
+        {
+            using var transaction = _session.BeginTransaction();
+            await _session.DeleteAsync(achievement);
+            await transaction.CommitAsync();
         }
     }
 }
