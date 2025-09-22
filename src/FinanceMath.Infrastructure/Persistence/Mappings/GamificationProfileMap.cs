@@ -18,9 +18,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Map(x => x.VirtualCurrency)
                 .Column("virtual_currency")
                 .Not.Nullable();
-            Map(x => x.LevelId)
-                .Column("level_id")
-                .Not.Nullable();
+
             Map(x => x.CurrentStreakDays)
                 .Column("current_streak_days")
                 .Not.Nullable();
@@ -30,6 +28,11 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             References(x => x.User)
                 .Column("user_id")
                 .Unique()
+                .Not.Nullable()
+                .Cascade.None();
+
+            References(x => x.Level)
+                .Column("level_id")
                 .Not.Nullable()
                 .Cascade.None();
 

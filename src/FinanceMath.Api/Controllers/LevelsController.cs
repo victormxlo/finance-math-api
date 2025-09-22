@@ -1,4 +1,7 @@
 using AutoMapper;
+using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Application.Gamification.Levels.Commands;
+using FinanceMath.Application.Gamification.Levels.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,8 +33,8 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator
                 .Send(new GetLevelByIdQuery { Id = id });
@@ -53,8 +56,8 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLevelRequest request)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateLevelRequest request)
         {
             var command = _mapper.Map<UpdateLevelCommand>(request);
             command.Id = id;
@@ -67,11 +70,11 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator
-                .Send(new DeleteLevelByIdCommand { Id = id });
+                .Send(new DeleteLevelCommand { Id = id });
 
             if (!result.Success)
                 return NotFound();

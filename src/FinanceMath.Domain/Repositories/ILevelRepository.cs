@@ -8,5 +8,6 @@ namespace FinanceMath.Domain.Repositories
         Task<Level> GetByIdAsync(int id);
         Task SaveAsync(Level level);
         Task UpdateAsync(Level level);
+        Task DeleteAsync(Level level);
     }
 }

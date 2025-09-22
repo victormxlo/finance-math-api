@@ -6,6 +6,7 @@ namespace FinanceMath.Domain.Repositories
     {
         Task<GamificationProfile> GetByUserIdAsync(Guid userId);
         Task<GamificationProfile> GetByIdAsync(Guid id);
+        Task<ICollection<GamificationProfile>> GetByLevelIdAsync(int levelId);
         Task<ICollection<GamificationProfile>> GetTopByExperienceAsync(int top);
         Task AddAsync(GamificationProfile profile);
         Task UpdateAsync(GamificationProfile profile);

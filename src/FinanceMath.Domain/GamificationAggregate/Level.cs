@@ -14,5 +14,14 @@
             Name = name;
             ThresholdExperience = thresholdExperience;
         }
+
+        public virtual void Update(string name, int thresholdExperience, int? newId)
+        {
+            Name = name;
+            ThresholdExperience = thresholdExperience;
+
+            if (newId is int value)
+                Id = value;
+        }
     }
 }

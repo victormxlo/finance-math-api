@@ -28,16 +28,23 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
 
         public async Task SaveAsync(Level level)
         {
-            using var tx = _session.BeginTransaction();
+            using var transaction = _session.BeginTransaction();
             await _session.SaveAsync(level);
-            await tx.CommitAsync();
+            await transaction.CommitAsync();
         }
 
         public async Task UpdateAsync(Level level)
         {
-            using var tx = _session.BeginTransaction();
+            using var transaction = _session.BeginTransaction();
             await _session.UpdateAsync(level);
-            await tx.CommitAsync();
+            await transaction.CommitAsync();
+        }
+
+        public async Task DeleteAsync(Level level)
+        {
+            using var transaction = _session.BeginTransaction();
+            await _session.DeleteAsync(level);
+            await transaction.CommitAsync();
         }
     }
 }

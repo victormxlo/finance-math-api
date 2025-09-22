@@ -31,6 +31,15 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public async Task<ICollection<GamificationProfile>> GetByLevelIdAsync(int levelId)
+        {
+            return await _session.Query<GamificationProfile>()
+                .Fetch(p => p.User)
+                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
+                .Where(gp => gp.Level.Id == levelId)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(GamificationProfile profile)
         {
             if (profile == null) throw new ArgumentNullException(nameof(profile));

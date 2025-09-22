@@ -9,7 +9,7 @@ namespace FinanceMath.Domain.GamificationAggregate
 
         public virtual int ExperiencePoints { get; protected set; }
         public virtual int VirtualCurrency { get; protected set; }
-        public virtual int LevelId { get; protected set; }
+        public virtual Level Level { get; protected set; }
         public virtual int CurrentStreakDays { get; protected set; }
         public virtual DateTime? LastActivityDate { get; protected set; }
 
@@ -17,13 +17,13 @@ namespace FinanceMath.Domain.GamificationAggregate
 
         protected GamificationProfile() { }
 
-        public GamificationProfile(User user)
+        public GamificationProfile(User user, Level level)
         {
             Id = Guid.NewGuid();
             User = user;
             ExperiencePoints = 0;
             VirtualCurrency = 0;
-            LevelId = 1;
+            Level = level;
             CurrentStreakDays = 0;
             LastActivityDate = null;
         }
@@ -34,8 +34,8 @@ namespace FinanceMath.Domain.GamificationAggregate
         public virtual void AddVirtualCurrency(int virtualCurrencyAmount)
             => VirtualCurrency += virtualCurrencyAmount;
 
-        public virtual void UpdateLevel(int levelId)
-            => LevelId = levelId;
+        public virtual void UpdateLevel(Level level)
+            => Level = level;
 
         public virtual void UpdateStreak(DateTime activityDate)
         {

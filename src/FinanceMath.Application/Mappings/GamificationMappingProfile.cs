@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using FinanceMath.Application.Gamification.Dtos;
+using FinanceMath.Application.Gamification.Levels.Dtos;
+using FinanceMath.Application.Gamification.Profiles.Dtos;
 using FinanceMath.Domain.GamificationAggregate;
 
 namespace FinanceMath.Application.Mappings
@@ -11,8 +12,13 @@ namespace FinanceMath.Application.Mappings
             CreateMap<GamificationProfile, GamificationProfileDto>()
                 .ForMember(dest => dest.UserId,
                     opt => opt.MapFrom(src => src.User.Id))
+                .ForMember(dest => dest.LevelId,
+                    opt => opt.MapFrom(src => src.Level.Id))
                 .ForMember(dest => dest.AchievementsIds,
                     opt => opt.MapFrom(src => src.Achievements.Select(a => a.Achievement.Id)));
+
+            CreateMap<Level, LevelDto>()
+                .ReverseMap();
         }
     }
 }
