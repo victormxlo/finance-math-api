@@ -1,6 +1,10 @@
 using AutoMapper;
 using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Application.Gamification.Achievements.Commands;
+using FinanceMath.Application.Gamification.Achievements.Queries;
+using FinanceMath.Application.Gamification.Leaderboards.Queries;
 using FinanceMath.Application.Gamification.Profiles.Commands;
+using FinanceMath.Application.Gamification.Profiles.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,15 +63,26 @@ namespace FinanceMath.Api.Controllers
 
             return Ok(result.Value);
         }
-        #region Experience Points
-        [HttpPost("{userId:guid}/xp")]
-        public async Task<IActionResult> GrantExperiencePoints(
-            Guid userId, [FromBody] GrantExperiencePointsRequest request)
-        {
-            var command = _mapper.Map<GrantExperiencePointsCommand>(request);
-            command.UserId = userId;
 
-            var result = await _mediator.Send(request);
+        [HttpGet("leaderboard")]
+        public async Task<IActionResult> GetLeaderboard([FromQuery] int? top)
+        {
+            var result = await _mediator.Send(new GetLeaderboardQuery { Top = top });
+
+            if (!result.Success)
+                return NotFound();
+
+            return Ok(result.Value);
+        }
+
+        #region Experience Points
+        [HttpPost("{userId:guid}/experience-points/grant")]
+        public async Task<IActionResult> GrantUserExperiencePoints(
+            Guid userId, [FromBody] GrantUserExperiencePointsRequest request)
+        {
+            var result = await _mediator.Send(
+                new GrantUserExperiencePointsCommand
+                { UserId = userId, ExperiencePointsAmount = request.Amount });
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });
@@ -77,14 +92,13 @@ namespace FinanceMath.Api.Controllers
         #endregion
 
         #region Virtual Currency
-        [HttpPost("{userId:guid}/currency")]
-        public async Task<IActionResult> GrantVirtualCurrency(
-            Guid userId, [FromBody] GrantVirtualCurrencyRequest request)
+        [HttpPost("{userId:guid}/currencies/grant")]
+        public async Task<IActionResult> GrantUserVirtualCurrency(
+            Guid userId, [FromBody] GrantUserVirtualCurrencyRequest request)
         {
-            var command = _mapper.Map<GrantVirtualCurrencyCommand>(request);
-            command.UserId = userId;
-
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(
+                new GrantUserVirtualCurrencyCommand
+                { UserId = userId, VirtualCurrencyAmount = request.Amount });
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });
@@ -106,15 +120,12 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost("{userId:guid}/achievements/{achievementId:guid}")]
+        [HttpPost("{userId:guid}/achievements/unlock")]
         public async Task<IActionResult> UnlockAchievement(
-            Guid userId, Guid achievementId, [FromBody] UnlockAchievementRequest request)
+            Guid userId, [FromBody] UnlockAchievementRequest request)
         {
-            var command = _mapper.Map<UnlockAchievementCommand>(request);
-            command.UserId = userId;
-            command.AchievementId = achievementId;
-
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(new UnlockUserAchievementCommand
+            { UserId = userId, AchievementId = request.AchievementId });
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });

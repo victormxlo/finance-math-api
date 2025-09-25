@@ -18,6 +18,8 @@ namespace FinanceMath.Api.Contracts.Requests
 
             CreateMap<UpdateChallengeRequest, UpdateChallengeCommand>();
             CreateMap<CompleteChallengeRequest, CompleteChallengeCommand>();
+
+            CreateMap<UpdateGamificationProfileRequest, UpdateGamificationProfileCommand>();
         }
     }
 }
