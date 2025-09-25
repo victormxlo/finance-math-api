@@ -167,27 +167,23 @@ namespace FinanceMath.Infrastructure.Services
             _logger.LogInformation("Unlocked achievement {AchievementId} for user {UserId}", achievementId, userId);
         }
 
-        public async Task<ICollection<LeaderboardEntryDto>> GetLeaderboardAsync(int top = 50)
+        public async Task<ICollection<LeaderboardEntryDto>> GetLeaderboardAsync(int? top = null)
         {
-            top = top <= 0 ? _settings.LeaderboardDefaultTop : top;
+            var topAmount = top ?? 50;
 
-            var topProfiles = await _profileRepository.GetTopByExperienceAsync(top);
+            var topProfiles = await _profileRepository.GetTopByExperienceAsync(topAmount);
 
             var result = new List<LeaderboardEntryDto>(topProfiles.Count());
-            int rank = 1;
             foreach (var p in topProfiles)
             {
-                var user = await _userRepository.GetByIdAsync(p.User.Id);
-                if (user != null)
+                result.Add(new LeaderboardEntryDto
                 {
-                    result.Add(new LeaderboardEntryDto
-                    {
-                        UserId = p.User.Id,
-                        Username = user.Username,
-                        ExperiencePoints = p.ExperiencePoints,
-                        Rank = rank++
-                    });
-                }
+                    UserId = p.User.Id,
+                    Username = p.User.Username,
+                    LevelId = p.Level.Id,
+                    LevelName = p.Level.Name,
+                    ExperiencePoints = p.ExperiencePoints
+                });
             }
 
             return result;
@@ -244,11 +240,12 @@ namespace FinanceMath.Infrastructure.Services
             var profile = await _profileRepository.GetByUserIdAsync(userId);
             if (profile == null)
             {
-                // create and persist
                 var user = await _userRepository.GetByIdAsync(userId)
                     ?? throw new InvalidOperationException($"User {userId} not found when creating gamification profile.");
 
-                profile = new GamificationProfile(user);
+                var level = await _levelRepository.GetInitialLevelAsync();
+
+                profile = new GamificationProfile(user, level);
                 await _profileRepository.AddAsync(profile);
                 _logger.LogInformation("Created gamification profile for user {UserId}", userId);
             }
@@ -286,10 +283,10 @@ namespace FinanceMath.Infrastructure.Services
 
             // find highest level for which profile.ExperiencePoints >= threshold
             var newLevel = levels.LastOrDefault(l => profile.ExperiencePoints >= l.ThresholdExperience);
-            if (newLevel != null && newLevel.Id != profile.LevelId)
+            if (newLevel != null && newLevel.Id != profile.Level.Id)
             {
-                var previousLevel = profile.LevelId;
-                profile.UpdateLevel(newLevel.Id);
+                var previousLevel = profile.Level.Id;
+                profile.UpdateLevel(newLevel);
 
                 _logger.LogInformation("User {UserId} leveled up from {OldLevel} to {NewLevel}", profile.User.Id, previousLevel, newLevel.Id);
             }
@@ -302,7 +299,7 @@ namespace FinanceMath.Infrastructure.Services
                 UserId = profile.User.Id,
                 ExperiencePoints = profile.ExperiencePoints,
                 VirtualCurrency = profile.VirtualCurrency,
-                LevelId = profile.LevelId,
+                LevelId = profile.Level.Id,
                 CurrentStreakDays = profile.CurrentStreakDays,
                 LastActivityDate = profile.LastActivityDate,
                 AchievementsIds = profile.Achievements.Select(a => a.Achievement.Id).ToList()

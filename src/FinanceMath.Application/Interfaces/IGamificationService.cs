@@ -22,7 +22,7 @@ namespace FinanceMath.Application.Interfaces
 
         Task UnlockAchievementAsync(Guid userId, Guid achievementId);
 
-        Task<ICollection<LeaderboardEntryDto>> GetLeaderboardAsync(int top = 50);
+        Task<ICollection<LeaderboardEntryDto>> GetLeaderboardAsync(int? top = null);
 
         Task<ICollection<ChallengeDto>> GetActiveChallengesAsync();
 
