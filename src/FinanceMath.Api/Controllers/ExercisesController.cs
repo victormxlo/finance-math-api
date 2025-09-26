@@ -57,7 +57,7 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateExerciseCommand request)
         {
             var result = await _mediator.Send(request);
@@ -92,6 +92,25 @@ namespace FinanceMath.Api.Controllers
             var response = _mapper.Map<ValidateExerciseAnswerResponse>(command.Value);
 
             return Ok(response);
+        }
+
+        [HttpPost("{id:guid}/complete")]
+        public async Task<IActionResult> Complete(
+            Guid id, [FromBody] CompleteExerciseRequest request)
+        {
+            var result = await _mediator.Send(
+                new CompleteExerciseCommand
+                {
+                    UserId = request.UserId,
+                    ExerciseId = id,
+                    ExerciseOptionId = request.ExerciseOptionId,
+                    UsedHint = request.UsedHint
+                });
+
+            if (!result.Success)
+                return BadRequest(new { error = result.Error });
+
+            return Ok(result.Value);
         }
         #endregion
 

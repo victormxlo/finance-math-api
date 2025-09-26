@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using FinanceMath.Application.Content.Exercises.Commands;
 using FinanceMath.Application.Content.Exercises.Dtos;
-using FinanceMath.Domain.ContentAggregate;
 using FinanceMath.Domain.Repositories;
 using MediatR;
 
@@ -22,7 +20,7 @@ namespace FinanceMath.Application.Content.Exercises.Commands.Handlers
         {
             try
             {
-                var exercise = new Exercise(
+                var exercise = new Domain.ContentAggregate.Exercise(
                     request.Question,
                     request.Explanation,
                     request.Difficulty

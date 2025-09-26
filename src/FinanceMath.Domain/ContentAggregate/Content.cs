@@ -6,6 +6,7 @@
         public virtual string Title { get; protected set; }
         public virtual string Body { get; protected set; }
         public virtual string? MediaUrl { get; protected set; }
+        public virtual bool IsLastInModule { get; protected set; }
 
         public virtual Guid CreatedBy { get; protected set; }
         public virtual DateTime CreatedAt { get; protected set; }
@@ -18,7 +19,7 @@
 
         protected Content() { }
 
-        public Content(string title, string body, Category category, Guid createdBy, string? mediaUrl = null)
+        public Content(string title, string body, Category category, Guid createdBy, string? mediaUrl = null, bool? isLastInModule = false)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -26,15 +27,17 @@
             Category = category;
             CreatedBy = createdBy;
             MediaUrl = mediaUrl;
+            IsLastInModule = isLastInModule ?? false;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public virtual void Update(string title, string body, Category category, string? mediaUrl = null)
+        public virtual void Update(string title, string body, Category category, string? mediaUrl = null, bool? isLastInModule = false)
         {
             Title = title;
             Body = body;
             Category = category;
             MediaUrl = mediaUrl;
+            IsLastInModule = isLastInModule ?? false;
             UpdatedAt = DateTime.UtcNow;
         }
     }

@@ -8,7 +8,7 @@ namespace FinanceMath.Application.Mappings
     {
         public ExerciseMappingProfile()
         {
-            CreateMap<Exercise, ExerciseDto>()
+            CreateMap<Domain.ContentAggregate.Exercise, ExerciseDto>()
                 .ForMember(dest => dest.Options,
                     opt => opt.MapFrom(src => src.Options.OrderBy(o => o.Order)))
                 .ForMember(dest => dest.ContentIds,

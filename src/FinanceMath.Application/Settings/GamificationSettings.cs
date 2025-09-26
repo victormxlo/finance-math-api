@@ -11,7 +11,9 @@
         public int Streak3DaysXp { get; set; } = 50;
         public int Streak7DaysXp { get; set; } = 300;
 
-        public int VirtualCurrencyPerDailyChallenge { get; set; } = 5;
+        public int VirtualCurrencyPerContent { get; set; } = 5;
+        public int VirtualCurrencyPerExercise { get; set; } = 10;
+        public int VirtualCurrencyPerDailyChallenge { get; set; } = 10;
 
         public int LeaderboardDefaultTop { get; set; } = 50;
     }

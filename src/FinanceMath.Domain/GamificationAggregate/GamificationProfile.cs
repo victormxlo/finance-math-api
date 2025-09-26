@@ -1,4 +1,5 @@
-﻿using FinanceMath.Domain.Users.Entities;
+﻿using FinanceMath.Domain.ContentAggregate;
+using FinanceMath.Domain.Users.Entities;
 
 namespace FinanceMath.Domain.GamificationAggregate
 {
@@ -14,6 +15,8 @@ namespace FinanceMath.Domain.GamificationAggregate
         public virtual DateTime? LastActivityDate { get; protected set; }
 
         public virtual ICollection<AchievementProgress> Achievements { get; protected set; } = new List<AchievementProgress>();
+        public virtual ICollection<UserExerciseProgress> CompletedExercises { get; protected set; } = new List<UserExerciseProgress>();
+        public virtual ICollection<UserContentProgress> CompletedContents { get; protected set; } = new List<UserContentProgress>();
 
         protected GamificationProfile() { }
 
@@ -51,6 +54,28 @@ namespace FinanceMath.Domain.GamificationAggregate
         {
             if (!Achievements.Any(a => a.Achievement.Id == achievement.Id))
                 Achievements.Add(new AchievementProgress(this, achievement, DateTime.UtcNow));
+        }
+
+        public virtual bool HasCompletedExercise(Exercise exercise)
+        {
+            return CompletedExercises.Any(e => e.Exercise.Id == exercise.Id);
+        }
+
+        public virtual void MarkExerciseCompleted(Exercise exercise, DateTime completedAt)
+        {
+            if (!HasCompletedExercise(exercise))
+                CompletedExercises.Add(new UserExerciseProgress(this, exercise, completedAt));
+        }
+
+        public virtual bool HasCompletedContent(Content content)
+        {
+            return CompletedContents.Any(c => c.Content.Id == content.Id);
+        }
+
+        public virtual void MarkContentCompleted(Content content, DateTime completedAt)
+        {
+            if (!HasCompletedContent(content))
+                CompletedContents.Add(new UserContentProgress(this, content, completedAt));
         }
     }
 }

@@ -11,5 +11,6 @@ namespace FinanceMath.Application.Content.Contents.Commands
         public Guid CategoryId { get; set; }
         public Guid CreatedBy { get; set; }
         public string? MediaUrl { get; set; }
+        public bool? IsLastInModule { get; set; } = false;
     }
 }

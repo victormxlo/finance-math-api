@@ -55,7 +55,7 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateContentCommand request)
         {
             var result = await _mediator.Send(request);
@@ -75,6 +75,20 @@ namespace FinanceMath.Api.Controllers
                 return BadRequest(new { error = result.Error });
 
             return NoContent();
+        }
+
+        [HttpPost("{id:guid}/complete")]
+        public async Task<IActionResult> Complete(
+            Guid id, [FromBody] CompleteContentRequest request)
+        {
+            var result = await _mediator.Send(
+                new CompleteContentCommand
+                { ContentId = id, UserId = request.UserId });
+
+            if (!result.Success)
+                return BadRequest(new { error = result.Error });
+
+            return Ok(result.Value);
         }
         #endregion
 
@@ -122,7 +136,7 @@ namespace FinanceMath.Api.Controllers
             return Ok(command.Value);
         }
 
-        [HttpPatch("{contentId:guid}/sections")]
+        [HttpPut("{contentId:guid}/sections")]
         public async Task<IActionResult> UpdateContentSection(Guid contentId, [FromBody] UpdateContentSectionRequest request)
         {
             var command = await _mediator.Send(new UpdateContentSectionCommand

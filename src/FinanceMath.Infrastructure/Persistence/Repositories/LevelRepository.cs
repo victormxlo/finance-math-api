@@ -26,6 +26,18 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             return await _session.GetAsync<Level>(id);
         }
 
+        public async Task<Level> GetInitialLevelAsync()
+        {
+            var initial = await _session.Query<Level>()
+                .OrderBy(l => l.ThresholdExperience)
+                .FirstOrDefaultAsync();
+
+            if (initial != null)
+                return initial;
+
+            return await GetByIdAsync(1);
+        }
+
         public async Task SaveAsync(Level level)
         {
             using var transaction = _session.BeginTransaction();

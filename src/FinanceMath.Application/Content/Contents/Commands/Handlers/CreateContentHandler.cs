@@ -29,7 +29,8 @@ namespace FinanceMath.Application.Content.Contents.Commands.Handlers
 
                 var content = new Domain.ContentAggregate.Content(
                     title: request.Title, body: request.Body, category: category,
-                    createdBy: request.CreatedBy, mediaUrl: request.MediaUrl);
+                    createdBy: request.CreatedBy, mediaUrl: request.MediaUrl,
+                    isLastInModule: request.IsLastInModule);
 
                 await _contentRepository.SaveAsync(content);
 

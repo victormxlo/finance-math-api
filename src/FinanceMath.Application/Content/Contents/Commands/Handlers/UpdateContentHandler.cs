@@ -32,7 +32,7 @@ namespace FinanceMath.Application.Content.Contents.Commands.Handlers
                 if (category == null)
                     return Result<ContentDto>.Fail($"No category found with id: {request.CategoryId}.");
 
-                content.Update(request.Title, request.Body, category, request.MediaUrl);
+                content.Update(request.Title, request.Body, category, request.MediaUrl, request.IsLastInModule);
 
                 await _contentRepository.UpdateAsync(content);
 

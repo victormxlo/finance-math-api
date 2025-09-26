@@ -51,7 +51,7 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCategoryCommand request)
         {
             var result = await _mediator.Send(request);

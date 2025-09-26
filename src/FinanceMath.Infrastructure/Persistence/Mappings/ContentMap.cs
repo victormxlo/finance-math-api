@@ -22,6 +22,9 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Map(x => x.MediaUrl)
                 .Column("media_url");
 
+            Map(x => x.IsLastInModule)
+                .Column("is_last_in_module");
+
             Map(x => x.CreatedBy)
                 .Column("created_by")
                 .Not.Nullable();
