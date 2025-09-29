@@ -14,9 +14,10 @@ namespace FinanceMath.Domain.GamificationAggregate
         public virtual int CurrentStreakDays { get; protected set; }
         public virtual DateTime? LastActivityDate { get; protected set; }
 
-        public virtual ICollection<AchievementProgress> Achievements { get; protected set; } = new List<AchievementProgress>();
         public virtual ICollection<UserExerciseProgress> CompletedExercises { get; protected set; } = new List<UserExerciseProgress>();
         public virtual ICollection<UserContentProgress> CompletedContents { get; protected set; } = new List<UserContentProgress>();
+        public virtual ICollection<AchievementProgress> Achievements { get; protected set; } = new List<AchievementProgress>();
+        public virtual ICollection<UserChallengeProgress> CompletedChallenges { get; protected set; } = new List<UserChallengeProgress>();
 
         protected GamificationProfile() { }
 
@@ -76,6 +77,17 @@ namespace FinanceMath.Domain.GamificationAggregate
         {
             if (!HasCompletedContent(content))
                 CompletedContents.Add(new UserContentProgress(this, content, completedAt));
+        }
+
+        public virtual bool HasCompletedChallenge(Guid challengeId)
+        {
+            return CompletedChallenges.Any(c => c.Challenge.Id == challengeId);
+        }
+
+        public virtual void MarkChallengeCompleted(Challenge challenge, DateTime completedAt)
+        {
+            if (!HasCompletedChallenge(challenge.Id))
+                CompletedChallenges.Add(new UserChallengeProgress(this, challenge, completedAt));
         }
     }
 }

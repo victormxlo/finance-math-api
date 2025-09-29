@@ -18,9 +18,10 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
         {
             return await _session.Query<GamificationProfile>()
                 .Fetch(p => p.User)
-                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
+                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
+                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
                 .Where(p => p.User.Id == userId)
                 .FirstOrDefaultAsync();
         }
@@ -29,9 +30,10 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
         {
             return await _session.Query<GamificationProfile>()
                 .Fetch(p => p.User)
-                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
+                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
+                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -39,9 +41,10 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
         {
             return await _session.Query<GamificationProfile>()
                 .Fetch(p => p.User)
-                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
+                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
+                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
                 .Where(gp => gp.Level.Id == levelId)
                 .ToListAsync();
         }

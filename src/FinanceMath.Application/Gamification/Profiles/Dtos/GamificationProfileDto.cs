@@ -9,5 +9,6 @@
         public int CurrentStreakDays { get; set; }
         public DateTime? LastActivityDate { get; set; }
         public ICollection<Guid> AchievementsIds { get; set; }
+        public ICollection<Guid> ChallengesIds { get; set; }
     }
 }

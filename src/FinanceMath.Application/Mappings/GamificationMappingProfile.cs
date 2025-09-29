@@ -17,7 +17,9 @@ namespace FinanceMath.Application.Mappings
                 .ForMember(dest => dest.LevelId,
                     opt => opt.MapFrom(src => src.Level.Id))
                 .ForMember(dest => dest.AchievementsIds,
-                    opt => opt.MapFrom(src => src.Achievements.Select(a => a.Achievement.Id)));
+                    opt => opt.MapFrom(src => src.Achievements.Select(a => a.Achievement.Id)))
+                .ForMember(dest => dest.ChallengesIds,
+                    opt => opt.MapFrom(src => src.CompletedChallenges.Select(c => c.Challenge.Id)));
 
             CreateMap<Level, LevelDto>()
                 .ReverseMap();

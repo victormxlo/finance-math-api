@@ -15,6 +15,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Map(x => x.ExperiencePoints)
                 .Column("experience_points")
                 .Not.Nullable();
+
             Map(x => x.VirtualCurrency)
                 .Column("virtual_currency")
                 .Not.Nullable();
@@ -50,6 +51,12 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
 
             HasMany(x => x.CompletedExercises)
                 .Table("user_exercise_progresses")
+                .KeyColumn("gamification_profile_id")
+                .Inverse()
+                .Cascade.AllDeleteOrphan();
+
+            HasMany(x => x.CompletedChallenges)
+                .Table("user_challenge_progress")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
                 .Cascade.AllDeleteOrphan();
