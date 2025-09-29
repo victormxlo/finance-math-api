@@ -1,5 +1,6 @@
 ﻿using FinanceMath.Application.Gamification.Achievements.Dtos;
 using FinanceMath.Application.Gamification.Profiles.Dtos;
+using FinanceMath.Application.Recommendations.Dtos;
 
 namespace FinanceMath.Application.Content.Contents.Dtos
 {
@@ -10,7 +11,7 @@ namespace FinanceMath.Application.Content.Contents.Dtos
         public RewardDto Reward { get; set; } = new();
         public GamificationProfileSummaryDto Profile { get; set; } = new();
         public ICollection<UserAchievementDto> AchievementsUnlocked { get; set; } = Array.Empty<UserAchievementDto>();
-        public ICollection<RecommendedContentDto> NextRecommended { get; set; } = Array.Empty<RecommendedContentDto>();
+        public ICollection<RecommendedItemDto> NextRecommended { get; set; } = Array.Empty<RecommendedItemDto>();
         public DateTime CompletedAtUtc { get; set; }
     }
 }

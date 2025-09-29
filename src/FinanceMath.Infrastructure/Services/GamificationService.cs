@@ -6,6 +6,7 @@ using FinanceMath.Application.Gamification.Challenges.Dtos;
 using FinanceMath.Application.Gamification.Leaderboards.Dtos;
 using FinanceMath.Application.Gamification.Profiles.Dtos;
 using FinanceMath.Application.Interfaces;
+using FinanceMath.Application.Services;
 using FinanceMath.Application.Settings;
 using FinanceMath.Domain.ContentAggregate;
 using FinanceMath.Domain.GamificationAggregate;
@@ -25,6 +26,7 @@ namespace FinanceMath.Infrastructure.Services
         private readonly IAchievementRepository _achievementRepository;
         private readonly IChallengeRepository _challengeRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IRecommendationService _recommendationService;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
@@ -38,6 +40,7 @@ namespace FinanceMath.Infrastructure.Services
             IAchievementRepository achievementRepository,
             IChallengeRepository challengeRepository,
             IUserRepository userRepository,
+            IRecommendationService recommendationService,
             IMediator mediator,
             IMapper mapper,
             ILogger<GamificationService> logger,
@@ -50,6 +53,7 @@ namespace FinanceMath.Infrastructure.Services
             _achievementRepository = achievementRepository ?? throw new ArgumentNullException(nameof(achievementRepository));
             _challengeRepository = challengeRepository ?? throw new ArgumentNullException(nameof(challengeRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _recommendationService = recommendationService ?? throw new ArgumentNullException(nameof(recommendationService));
             _mediator = mediator;
             _mapper = mapper;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -76,7 +80,7 @@ namespace FinanceMath.Infrastructure.Services
             var profile = await _profileRepository.GetByUserIdAsync(userId)
                           ?? throw new InvalidOperationException($"Gamification profile for user {userId} not found.");
 
-            return MapToDto(profile);
+            return _mapper.Map<GamificationProfileDto>(profile);
         }
 
         public async Task AwardExperienceAsync(Guid userId, int experiencePoints, string? reason = null)
@@ -97,41 +101,13 @@ namespace FinanceMath.Infrastructure.Services
 
         public async Task AwardVirtualCurrencyAsync(Guid userId, int amount, string? reason = null)
         {
-            if (amount == 0) return; // nothing to do
+            if (amount == 0) return;
             var profile = await EnsureAndGetProfileAsync(userId);
 
             profile.AddVirtualCurrency(amount);
             await _profileRepository.UpdateAsync(profile);
 
             _logger.LogInformation("Awarded {Amount} virtual currency to user {UserId}. Reason: {Reason}", amount, userId, reason);
-        }
-
-        public async Task ProcessExerciseCompletedAsync(Guid userId, Guid exerciseId, bool isCorrect, bool usedHint, DateTime activityDateUtc)
-        {
-            var profile = await EnsureAndGetProfileAsync(userId);
-
-            // determine xp
-            int xp;
-            if (isCorrect)
-            {
-                xp = _settings.XpPerExercise;
-                if (!usedHint) xp += _settings.XpPerExerciseNoHintBonus;
-            }
-            else
-            {
-                xp = _settings.XpPerExerciseIncorrect;
-            }
-
-            profile.AddExperience(xp);
-            profile.UpdateStreak(activityDateUtc);
-
-            // persist changes & level/achievements
-            await ApplyAchievementsByCriteriaInternalAsync(profile, $"exercise:{exerciseId}:correct:{isCorrect}");
-            await CheckLevelUpAsync(profile);
-            await _profileRepository.UpdateAsync(profile);
-
-            _logger.LogInformation("Processed exercise completed for user {UserId} exercise {ExerciseId} isCorrect={IsCorrect} awardedXp={Xp}",
-                userId, exerciseId, isCorrect, xp);
         }
 
         public async Task<CompleteContentResponseDto> CompleteContentAsync(
@@ -171,14 +147,14 @@ namespace FinanceMath.Infrastructure.Services
             if (newLevel != null && newLevel.Id != profile.Level.Id)
                 profile.UpdateLevel(newLevel);
 
-            var newlyUnlocked = await EvaluateAndApplyAchievementsAsync(profile, null, true); // pass exercise null
+            var newlyUnlocked = await EvaluateAndApplyAchievementsAsync(profile, null, true);
 
             await _profileRepository.UpdateAsync(profile);
 
             var dto = new CompleteContentResponseDto
             {
                 ContentId = contentId,
-                ModuleCompleted = content.IsLastInModule, // or however you determine
+                ModuleCompleted = content.IsLastInModule,
                 CompletedAtUtc = now,
                 Reward = new RewardDto { XpAwarded = xpAwarded, VirtualCurrencyAwarded = currencyAwarded },
                 Profile = MapProfileToSummary(profile),
@@ -193,8 +169,11 @@ namespace FinanceMath.Infrastructure.Services
                 }).ToList()
             };
 
-            //if (_recommendationService != null)
-            //    dto.NextRecommended = await _recommendationService.RecommendNextForUserAsync(profile.User.Id, ct);
+            if (_recommendationService != null)
+            {
+                var recommendations = await _recommendationService.GetRecommendationsAsync(profile.User.Id);
+                dto.NextRecommended = recommendations.Items.ToList();
+            }
 
             _logger.LogInformation("User {UserId} completed content {ContentId}. xp={Xp}", userId, contentId, xpAwarded);
 
@@ -208,21 +187,18 @@ namespace FinanceMath.Infrastructure.Services
             Guid? selectedOptionId,
             bool usedHint)
         {
-            // 1. loads
             var profile = await _profileRepository.GetByUserIdAsync(userId);
             if (profile == null) throw new InvalidOperationException($"Gamification profile not found for user {userId}");
 
             var exercise = await _exerciseRepository.GetByIdAsync(exerciseId);
             if (exercise == null) throw new InvalidOperationException($"Exercise {exerciseId} not found");
 
-            // evaluate correctness
             bool isCorrect = EvaluateExerciseAnswer(exercise, selectedOptionId);
             string explanation = exercise.Explanation;
 
             var now = DateTime.UtcNow;
             var alreadyCompleted = profile.HasCompletedExercise(exercise);
 
-            // compute XP & currency awarding logic
             int xpAwarded;
             int currencyAwarded;
 
@@ -243,7 +219,6 @@ namespace FinanceMath.Infrastructure.Services
                 profile.AddExperience(xpAwarded);
                 profile.AddVirtualCurrency(currencyAwarded);
 
-                // agora marcamos com ENTIDADE Exercise (navegação)
                 profile.MarkExerciseCompleted(exercise, now);
             }
             else
@@ -252,20 +227,16 @@ namespace FinanceMath.Infrastructure.Services
                 currencyAwarded = 0;
             }
 
-            // always update streak on completion (policy: update even if incorrect)
             profile.UpdateStreak(now);
 
-            // compute level based on new total XP:
             var newLevel = await GetLevelForXpAsync(profile.ExperiencePoints);
             if (newLevel != null && newLevel.Id != profile.Level.Id)
                 profile.UpdateLevel(newLevel);
 
-            // Evaluate achievements: collect newly unlocked achievements
             var newlyUnlocked = await EvaluateAndApplyAchievementsAsync(profile, exercise, isCorrect);
 
             await _profileRepository.UpdateAsync(profile);
 
-            // build DTO
             var dto = new CompleteExerciseResponseDto
             {
                 ExerciseId = exerciseId,
@@ -287,11 +258,11 @@ namespace FinanceMath.Infrastructure.Services
                 }).ToList()
             };
 
-            // TBI
-            //if (_recommendationService != null)
-            //{
-            //    dto.NextRecommended = await _recommendationService.RecommendNextForUserAsync(profile.User.Id, ct);
-            //}
+            if (_recommendationService != null)
+            {
+                var recommendations = await _recommendationService.GetRecommendationsAsync(profile.User.Id);
+                dto.NextRecommended = recommendations.Items.ToList();
+            }
 
             _logger.LogInformation("User {UserId} completed exercise {ExerciseId}. correct={IsCorrect}, xp={Xp}",
                 userId, exerciseId, isCorrect, xpAwarded);
@@ -299,19 +270,43 @@ namespace FinanceMath.Infrastructure.Services
             return dto;
         }
 
-        public async Task ProcessContentCompletedAsync(Guid userId, Guid contentId, DateTime activityDateUtc)
+        public async Task<CompleteChallengeResponseDto> CompleteChallengeAsync(
+            Guid userId,
+            Guid challengeId)
         {
-            var profile = await EnsureAndGetProfileAsync(userId);
+            var profile = await _profileRepository.GetByUserIdAsync(userId);
+            if (profile == null) throw new InvalidOperationException("Profile not found");
 
-            profile.AddExperience(_settings.XpPerContent);
-            profile.UpdateStreak(activityDateUtc);
+            var challenge = await _challengeRepository.GetByIdAsync(challengeId);
+            if (challenge == null) throw new InvalidOperationException("Challenge not found");
 
-            await ApplyAchievementsByCriteriaInternalAsync(profile, $"content:{contentId}:completed");
-            await CheckLevelUpAsync(profile);
-            await _profileRepository.UpdateAsync(profile);
+            var alreadyCompleted = profile.HasCompletedChallenge(challengeId);
+            int xpAwarded = 0, currencyAwarded = 0;
 
-            _logger.LogInformation("Processed content completed for user {UserId} content {ContentId} awardedXp={Xp}",
-                userId, contentId, _settings.XpPerContent);
+            if (!alreadyCompleted)
+            {
+                xpAwarded = _settings.XpPerChallenge;
+                currencyAwarded = _settings.VirtualCurrencyPerChallenge;
+
+                profile.AddExperience(xpAwarded);
+                profile.AddVirtualCurrency(currencyAwarded);
+
+                profile.MarkChallengeCompleted(challenge, DateTime.UtcNow);
+
+                await ApplyAchievementsByCriteriaInternalAsync(profile, "challenge_completed");
+
+                await _profileRepository.UpdateAsync(profile);
+            }
+
+            return new CompleteChallengeResponseDto
+            {
+                ChallengeId = challengeId,
+                XpAwarded = xpAwarded,
+                VirtualCurrencyAwarded = currencyAwarded,
+                TotalXp = profile.ExperiencePoints,
+                LevelId = profile.Level.Id,
+                LevelName = profile.Level.Name
+            };
         }
 
         public async Task ApplyAchievementsByCriteriaAsync(Guid userId, string criteriaKey)
@@ -331,7 +326,6 @@ namespace FinanceMath.Infrastructure.Services
             var achievement = await _achievementRepository.GetByIdAsync(achievementId)
                 ?? throw new InvalidOperationException($"Achievement {achievementId} not found.");
 
-            // add if not present
             profile.AddAchievement(achievement);
             profile.AddExperience(achievement.ExperienceReward);
             profile.AddVirtualCurrency(achievement.VirtualCurrencyReward);
@@ -369,43 +363,6 @@ namespace FinanceMath.Infrastructure.Services
             var challenges = await _challengeRepository.GetActivesAsync();
 
             return _mapper.Map<ICollection<ChallengeDto>>(challenges);
-        }
-
-        public async Task<bool> ClaimChallengeRewardAsync(Guid userId, Guid challengeId)
-        {
-            var profile = await EnsureAndGetProfileAsync(userId);
-            var challenge = await _challengeRepository.GetByIdAsync(challengeId)
-                ?? throw new InvalidOperationException($"Challenge {challengeId} not found.");
-
-            // validate active
-            var now = DateTime.UtcNow;
-            if (challenge.StartDate > now || challenge.EndDate < now) return false;
-
-            // Check if user already claimed (we need a persisted record; assuming AchievementProgress or challenge_claims table)
-            // Basic implementation: use a criteria achievement to mark claim
-            var claimCriteria = $"challenge_claimed:{challengeId}";
-            var existingAchievements = await _achievementRepository.GetByCriteriaAsync(claimCriteria);
-            // If there is a dedicated claim mechanism, prefer that; here we'll reuse achievements pattern:
-            var alreadyClaimed = profile.Achievements.Any(ap => ap.Achievement.CriteriaKey == claimCriteria);
-            if (alreadyClaimed) return false;
-
-            // award rewards
-            profile.AddExperience(challenge.ExperienceReward);
-            profile.AddVirtualCurrency(challenge.VirtualCurrencyReward);
-
-            // mark as claimed: create or use a special achievement if exists
-            var claimAchievements = await _achievementRepository.GetByCriteriaAsync(claimCriteria);
-            var claimAchievement = claimAchievements.FirstOrDefault();
-            if (claimAchievement != null)
-            {
-                profile.AddAchievement(claimAchievement);
-            }
-
-            await CheckLevelUpAsync(profile);
-            await _profileRepository.UpdateAsync(profile);
-
-            _logger.LogInformation("User {UserId} claimed challenge {ChallengeId} rewards.", userId, challengeId);
-            return true;
         }
 
         #region Helpers
@@ -455,7 +412,6 @@ namespace FinanceMath.Infrastructure.Services
             var levels = (await _levelRepository.GetAllAsync()).OrderBy(l => l.ThresholdExperience).ToList();
             if (!levels.Any()) return;
 
-            // find highest level for which profile.ExperiencePoints >= threshold
             var newLevel = levels.LastOrDefault(l => profile.ExperiencePoints >= l.ThresholdExperience);
             if (newLevel != null && newLevel.Id != profile.Level.Id)
             {
@@ -464,20 +420,6 @@ namespace FinanceMath.Infrastructure.Services
 
                 _logger.LogInformation("User {UserId} leveled up from {OldLevel} to {NewLevel}", profile.User.Id, previousLevel, newLevel.Id);
             }
-        }
-
-        private GamificationProfileDto MapToDto(GamificationProfile profile)
-        {
-            return new GamificationProfileDto
-            {
-                UserId = profile.User.Id,
-                ExperiencePoints = profile.ExperiencePoints,
-                VirtualCurrency = profile.VirtualCurrency,
-                LevelId = profile.Level.Id,
-                CurrentStreakDays = profile.CurrentStreakDays,
-                LastActivityDate = profile.LastActivityDate,
-                AchievementsIds = profile.Achievements.Select(a => a.Achievement.Id).ToList()
-            };
         }
 
         private async Task<Level?> GetLevelForXpAsync(int xp)
@@ -499,7 +441,9 @@ namespace FinanceMath.Infrastructure.Services
         }
 
         private async Task<IEnumerable<Achievement>> EvaluateAndApplyAchievementsAsync(
-            GamificationProfile profile, Exercise exerciseContext, bool lastActionWasCorrect)
+            GamificationProfile profile,
+            Exercise? exerciseContext = null,
+            bool lastActionWasCorrect = false)
         {
             var unlocked = new List<Achievement>();
             var allAchievements = await _achievementRepository.GetAllAsync();
@@ -509,57 +453,56 @@ namespace FinanceMath.Infrastructure.Services
                 if (profile.Achievements.Any(ap => ap.Achievement.Id == achievement.Id))
                     continue;
 
-                // simple criteria parsing
-                var key = achievement.CriteriaKey ?? string.Empty;
+                var key = achievement.CriteriaKey;
+                if (string.IsNullOrWhiteSpace(key))
+                    continue;
 
                 bool shouldUnlock = false;
 
-                if (key.StartsWith("complete_exercise:"))
+                if (key.StartsWith("complete_exercise:", StringComparison.OrdinalIgnoreCase))
                 {
-                    var parts = key.Split(':', 2);
-                    if (parts.Length == 2 && Guid.TryParse(parts[1], out var targetExerciseId))
+                    if (Guid.TryParse(key.Split(':', 2)[1], out var targetExerciseId))
                     {
                         var exercise = await _exerciseRepository.GetByIdAsync(targetExerciseId);
-
-                        if (exercise != null && profile.HasCompletedExercise(exercise)) shouldUnlock = true;
+                        if (exercise is null) throw new InvalidOperationException("Exercise not found.");
+                        shouldUnlock = profile.HasCompletedExercise(exercise);
                     }
                 }
-                else if (key.StartsWith("complete_content:"))
+                else if (key.StartsWith("complete_content:", StringComparison.OrdinalIgnoreCase))
                 {
-                    var parts = key.Split(':', 2);
-                    if (parts.Length == 2 && Guid.TryParse(parts[1], out var targetContentId))
+                    if (Guid.TryParse(key.Split(':', 2)[1], out var targetContentId))
                     {
                         var content = await _contentRepository.GetByIdAsync(targetContentId);
-
-                        if (content != null && profile.HasCompletedContent(content)) shouldUnlock = true;
+                        if (content is null) throw new InvalidOperationException("Content not found.");
+                        shouldUnlock = profile.HasCompletedContent(content);
                     }
                 }
-                else if (key.StartsWith("complete_n_exercises:"))
+                else if (key.StartsWith("complete_n_exercises:", StringComparison.OrdinalIgnoreCase))
                 {
-                    var parts = key.Split(':', 2);
-                    if (parts.Length == 2 && int.TryParse(parts[1], out var n))
+                    if (int.TryParse(key.Split(':', 2)[1], out var n))
                     {
-                        if (profile.CompletedExercises.Count >= n) shouldUnlock = true;
+                        shouldUnlock = profile.CompletedExercises.Count >= n;
                     }
                 }
-                else if (key.StartsWith("streak_days:"))
+                else if (key.StartsWith("streak_days:", StringComparison.OrdinalIgnoreCase))
                 {
-                    var parts = key.Split(':', 2);
-                    if (parts.Length == 2 && int.TryParse(parts[1], out var days))
+                    if (int.TryParse(key.Split(':', 2)[1], out var days))
                     {
-                        if (profile.CurrentStreakDays >= days) shouldUnlock = true;
+                        shouldUnlock = profile.CurrentStreakDays >= days;
                     }
                 }
-                else if (key == "first_exercise_completed")
+                else if (key.Equals("first_exercise_completed", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (profile.CompletedExercises.Count >= 1) shouldUnlock = true;
+                    shouldUnlock = profile.CompletedExercises.Count >= 1;
                 }
 
                 if (shouldUnlock)
                 {
                     profile.AddAchievement(achievement);
+
                     if (achievement.ExperienceReward > 0)
                         profile.AddExperience(achievement.ExperienceReward);
+
                     if (achievement.VirtualCurrencyReward != 0)
                         profile.AddVirtualCurrency(achievement.VirtualCurrencyReward);
 

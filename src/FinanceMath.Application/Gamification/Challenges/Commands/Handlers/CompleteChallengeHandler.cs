@@ -1,10 +1,11 @@
-﻿using FinanceMath.Application.Interfaces;
+﻿using FinanceMath.Application.Gamification.Challenges.Dtos;
+using FinanceMath.Application.Interfaces;
 using FinanceMath.Domain.Repositories;
 using MediatR;
 
 namespace FinanceMath.Application.Gamification.Challenges.Commands.Handlers
 {
-    public class CompleteChallengeHandler : IRequestHandler<CompleteChallengeCommand, Result<Unit>>
+    public class CompleteChallengeHandler : IRequestHandler<CompleteChallengeCommand, Result<CompleteChallengeResponseDto>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IChallengeRepository _challengeRepository;
@@ -20,28 +21,27 @@ namespace FinanceMath.Application.Gamification.Challenges.Commands.Handlers
             _gamificationService = gamificationService;
         }
 
-        public async Task<Result<Unit>> Handle(CompleteChallengeCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CompleteChallengeResponseDto>> Handle(CompleteChallengeCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var user = await _userRepository.GetByIdAsync(request.UserId);
 
                 if (user == null)
-                    return Result<Unit>.Fail($"User not found with id: {request.UserId}.");
+                    return Result<CompleteChallengeResponseDto>.Fail($"User not found with id: {request.UserId}.");
 
                 var challenge = await _challengeRepository.GetByIdAsync(request.ChallengeId);
 
                 if (challenge == null)
-                    return Result<Unit>.Fail($"Challenge not found with id: {request.ChallengeId}.");
+                    return Result<CompleteChallengeResponseDto>.Fail($"Challenge not found with id: {request.ChallengeId}.");
 
-                // TBD: Specific method call
-                // await _gamificationService.CompleteChallengeAsync();
+                var response = await _gamificationService.CompleteChallengeAsync(user.Id, challenge.Id);
 
-                return Result<Unit>.Ok(Unit.Value);
+                return Result<CompleteChallengeResponseDto>.Ok(response);
             }
             catch (Exception ex)
             {
-                return Result<Unit>.Fail($"Failed to complete challenge: {ex.Message}.");
+                return Result<CompleteChallengeResponseDto>.Fail($"Failed to complete challenge: {ex.Message}.");
             }
         }
     }

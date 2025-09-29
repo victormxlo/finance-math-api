@@ -16,13 +16,11 @@ namespace FinanceMath.Application.Interfaces
 
         Task AwardVirtualCurrencyAsync(Guid userId, int amount, string? reason = null);
 
-        Task ProcessExerciseCompletedAsync(Guid userId, Guid exerciseId, bool isCorrect, bool usedHint, DateTime activityDateUtc);
-
         Task<CompleteContentResponseDto> CompleteContentAsync(Guid userId, Guid contentId);
 
         Task<CompleteExerciseResponseDto> CompleteExerciseAsync(Guid userId, Guid exerciseId, Guid? selectedOptionId, bool usedHint);
 
-        Task ProcessContentCompletedAsync(Guid userId, Guid contentId, DateTime activityDateUtc);
+        Task<CompleteChallengeResponseDto> CompleteChallengeAsync(Guid userId, Guid challengeId);
 
         Task ApplyAchievementsByCriteriaAsync(Guid userId, string criteriaKey);
 
@@ -31,7 +29,5 @@ namespace FinanceMath.Application.Interfaces
         Task<ICollection<LeaderboardEntryDto>> GetLeaderboardAsync(int? top = null);
 
         Task<ICollection<ChallengeDto>> GetActiveChallengesAsync();
-
-        Task<bool> ClaimChallengeRewardAsync(Guid userId, Guid challengeId);
     }
 }

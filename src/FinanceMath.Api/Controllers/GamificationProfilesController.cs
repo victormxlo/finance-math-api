@@ -125,7 +125,7 @@ namespace FinanceMath.Api.Controllers
             Guid userId, [FromBody] UnlockAchievementRequest request)
         {
             var result = await _mediator.Send(new UnlockUserAchievementCommand
-            { UserId = userId, AchievementId = request.AchievementId });
+            { UserId = userId, AchievementId = request.AchievementId, CriteriaKey = request.CriteriaKey });
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });

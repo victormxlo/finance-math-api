@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FinanceMath.Application.Gamification.Achievements.Dtos;
+using FinanceMath.Application.Interfaces;
 using FinanceMath.Domain.Repositories;
 using MediatR;
 
@@ -10,17 +11,20 @@ namespace FinanceMath.Application.Gamification.Achievements.Commands.Handlers
         private readonly IUserRepository _userRepository;
         private readonly IGamificationProfileRepository _gamificationProfileRepository;
         private readonly IAchievementRepository _achievementRepository;
+        private readonly IGamificationService _gamificationService;
         private readonly IMapper _mapper;
 
         public UnlockUserAchievementHandler(
             IUserRepository userRepository,
             IGamificationProfileRepository gamificationProfileRepository,
             IAchievementRepository achievementRepository,
+            IGamificationService gamificationService,
             IMapper mapper)
         {
             _userRepository = userRepository;
             _gamificationProfileRepository = gamificationProfileRepository;
             _achievementRepository = achievementRepository;
+            _gamificationService = gamificationService;
             _mapper = mapper;
         }
 
@@ -44,9 +48,7 @@ namespace FinanceMath.Application.Gamification.Achievements.Commands.Handlers
                 if (achievement == null)
                     return Result<AchievementDto>.Fail($"Achievement not found with id: {request.AchievementId}.");
 
-                profile.AddAchievement(achievement);
-
-                await _gamificationProfileRepository.UpdateAsync(profile);
+                await _gamificationService.ApplyAchievementsByCriteriaAsync(user.Id, request.CriteriaKey);
 
                 return Result<AchievementDto>.Ok(_mapper.Map<AchievementDto>(achievement));
             }
