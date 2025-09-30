@@ -7,7 +7,10 @@ namespace FinanceMath.Application.Mappings
     {
         public ContentMappingProfile()
         {
-            CreateMap<Domain.ContentAggregate.Content, ContentDto>().ReverseMap();
+            CreateMap<Domain.ContentAggregate.Content, ContentDto>()
+                .ForMember(dest => dest.ExerciseIds,
+                    opt => opt.MapFrom(src => src.ContentExercises.Select(e => e.Exercise.Id)))
+                .ReverseMap();
         }
     }
 }

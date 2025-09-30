@@ -1,3 +1,4 @@
+using AutoMapper;
 using FinanceMath.Api.Contracts.Requests;
 using FinanceMath.Application.Content.Contents.Commands;
 using FinanceMath.Application.Content.Contents.Queries;
@@ -15,10 +16,12 @@ namespace FinanceMath.Api.Controllers
     public class ContentsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ContentsController(IMediator mediator)
+        public ContentsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         #region Contents
@@ -55,10 +58,13 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateContentCommand request)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContentRequest request)
         {
-            var result = await _mediator.Send(request);
+            var command = _mapper.Map<UpdateContentCommand>(request);
+            command.Id = id;
+
+            var result = await _mediator.Send(command);
 
             if (!result.Success)
                 return BadRequest(new { error = result.Error });
@@ -167,5 +173,18 @@ namespace FinanceMath.Api.Controllers
             return NoContent();
         }
         #endregion
+
+        [HttpPost("{contentId:guid}/link-exercise")]
+        public async Task<IActionResult> LinkExercise(Guid contentId, [FromBody] LinkContentExerciseRequest request)
+        {
+            var result = await _mediator.Send(
+                new LinkContentExerciseCommand
+                { ContentId = contentId, ExerciseId = request.ExerciseId });
+
+            if (!result.Success)
+                return BadRequest(new { error = result.Error });
+
+            return Ok(result.Value);
+        }
     }
 }

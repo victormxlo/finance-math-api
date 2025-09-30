@@ -1,4 +1,6 @@
-﻿namespace FinanceMath.Application.Content.Contents.Dtos
+﻿using FinanceMath.Domain.ContentAggregate;
+
+namespace FinanceMath.Application.Content.Contents.Dtos
 {
     public class ContentDto
     {
@@ -10,5 +12,7 @@
         public Guid CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<Guid> ExerciseIds { get; set; } = new List<Guid>();
+        public ICollection<ContentSection> Sections { get; set; } = new List<ContentSection>();
     }
 }

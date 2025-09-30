@@ -9,17 +9,9 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
         {
             Table("content_exercises");
 
-            Id(x => x.Id).GeneratedBy.GuidComb();
-
-            References(x => x.Content)
-                .Column("content_id")
-                .Not.Nullable()
-                .Cascade.None();
-
-            References(x => x.Exercise)
-                .Column("exercise_id")
-                .Not.Nullable()
-                .Cascade.None();
+            CompositeId()
+                .KeyReference(x => x.Content, "content_id")
+                .KeyReference(x => x.Exercise, "exercise_id");
         }
     }
 }

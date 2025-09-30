@@ -19,6 +19,10 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .CustomSqlType("text")
                 .Not.Nullable();
 
+            Map(x => x.Order)
+                .Column("sort_order")
+                .Not.Nullable();
+
             Map(x => x.MediaUrl)
                 .Column("media_url");
 

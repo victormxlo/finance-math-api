@@ -28,7 +28,7 @@ namespace FinanceMath.Application.Content.Contents.Commands.Handlers
                     return Result<ContentDto>.Fail($"No category found with id: {request.CategoryId}.");
 
                 var content = new Domain.ContentAggregate.Content(
-                    title: request.Title, body: request.Body, category: category,
+                    title: request.Title, body: request.Body, order: request.Order, category: category,
                     createdBy: request.CreatedBy, mediaUrl: request.MediaUrl,
                     isLastInModule: request.IsLastInModule);
 

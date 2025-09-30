@@ -12,7 +12,7 @@ namespace FinanceMath.Application.Mappings
                 .ForMember(dest => dest.Options,
                     opt => opt.MapFrom(src => src.Options.OrderBy(o => o.Order)))
                 .ForMember(dest => dest.ContentIds,
-                    opt => opt.MapFrom(src => src.ContentExercises.Select(ce => ce.Id)))
+                    opt => opt.MapFrom(src => src.ContentExercises.Select(ce => ce.Content.Id)))
                 .ReverseMap();
 
             CreateMap<ExerciseOption, ExerciseOptionPublicDto>()
