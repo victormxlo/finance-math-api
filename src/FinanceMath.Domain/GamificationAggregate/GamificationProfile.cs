@@ -16,7 +16,7 @@ namespace FinanceMath.Domain.GamificationAggregate
 
         public virtual ICollection<UserExerciseProgress> CompletedExercises { get; protected set; } = new List<UserExerciseProgress>();
         public virtual ICollection<UserContentProgress> CompletedContents { get; protected set; } = new List<UserContentProgress>();
-        public virtual ICollection<AchievementProgress> Achievements { get; protected set; } = new List<AchievementProgress>();
+        public virtual ICollection<UserAchievementProgress> Achievements { get; protected set; } = new List<UserAchievementProgress>();
         public virtual ICollection<UserChallengeProgress> CompletedChallenges { get; protected set; } = new List<UserChallengeProgress>();
 
         protected GamificationProfile() { }
@@ -54,7 +54,7 @@ namespace FinanceMath.Domain.GamificationAggregate
         public virtual void AddAchievement(Achievement achievement)
         {
             if (!Achievements.Any(a => a.Achievement.Id == achievement.Id))
-                Achievements.Add(new AchievementProgress(this, achievement, DateTime.UtcNow));
+                Achievements.Add(new UserAchievementProgress(this, achievement, DateTime.UtcNow));
         }
 
         public virtual bool HasCompletedExercise(Exercise exercise)
