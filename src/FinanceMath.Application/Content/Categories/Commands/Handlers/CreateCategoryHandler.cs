@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FinanceMath.Application.Content.Categories.Commands;
 using FinanceMath.Application.Content.Categories.Dtos;
 using FinanceMath.Domain.ContentAggregate;
 using FinanceMath.Domain.Repositories;
