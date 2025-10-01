@@ -12,7 +12,7 @@ namespace FinanceMath.Infrastructure.Data
             return Fluently.Configure()
                 .Database(PostgreSQLConfiguration.Standard
                     .ConnectionString(connectionString)
-                    .Dialect<NHibernate.Dialect.PostgreSQLDialect>())
+                    .Dialect<NHibernate.Dialect.PostgreSQL83Dialect>())
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserMap>())
                 .BuildSessionFactory();
         }
