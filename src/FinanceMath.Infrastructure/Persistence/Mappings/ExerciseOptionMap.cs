@@ -8,7 +8,9 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
         {
             Table("exercise_options");
 
-            Id(x => x.Id).GeneratedBy.GuidComb();
+            Id(x => x.Id)
+                .CustomSqlType("uuid")
+                .GeneratedBy.GuidComb();
 
             References(x => x.Exercise)
                 .Column("exercise_id")

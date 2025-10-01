@@ -9,7 +9,8 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
         {
             Table("users");
             Id(x => x.Id)
-                .CustomSqlType("uuid").GeneratedBy.GuidComb();
+                .CustomSqlType("uuid")
+                .GeneratedBy.GuidComb();
             Map(x => x.Username)
                 .Not.Nullable();
             Map(x => x.FullName)

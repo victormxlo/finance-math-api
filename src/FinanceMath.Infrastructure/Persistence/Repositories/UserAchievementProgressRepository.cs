@@ -5,36 +5,36 @@ using NHibernate.Linq;
 
 namespace FinanceMath.Infrastructure.Persistence.Repositories
 {
-    public class AchievementProgressRepository : IAchievementProgressRepository
+    public class UserAchievementProgressRepository : IUserAchievementProgressRepository
     {
         private readonly ISession _session;
 
-        public AchievementProgressRepository(ISession session)
+        public UserAchievementProgressRepository(ISession session)
         {
             _session = session;
         }
 
-        public async Task<ICollection<AchievementProgress>> GetByAchievementId(Guid achievementId)
+        public async Task<ICollection<UserAchievementProgress>> GetByAchievementId(Guid achievementId)
         {
-            return await _session.Query<AchievementProgress>()
+            return await _session.Query<UserAchievementProgress>()
                 .Fetch(ap => ap.GamificationProfile)
                 .Fetch(ap => ap.Achievement)
                 .Where(ap => ap.Achievement.Id == achievementId)
                 .ToListAsync();
         }
 
-        public async Task<ICollection<AchievementProgress>> GetByGamificationProfileId(Guid gamificationProfileId)
+        public async Task<ICollection<UserAchievementProgress>> GetByGamificationProfileId(Guid gamificationProfileId)
         {
-            return await _session.Query<AchievementProgress>()
+            return await _session.Query<UserAchievementProgress>()
                 .Fetch(ap => ap.GamificationProfile)
                 .Fetch(ap => ap.Achievement)
                 .Where(ap => ap.GamificationProfile.Id == gamificationProfileId)
                 .ToListAsync();
         }
 
-        public async Task<ICollection<AchievementProgress>> GetByUserId(Guid userId)
+        public async Task<ICollection<UserAchievementProgress>> GetByUserId(Guid userId)
         {
-            return await _session.Query<AchievementProgress>()
+            return await _session.Query<UserAchievementProgress>()
                 .Fetch(ap => ap.GamificationProfile)
                 .Fetch(ap => ap.Achievement)
                 .Where(ap => ap.GamificationProfile.User.Id == userId)

@@ -23,20 +23,9 @@ namespace FinanceMath.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool? active)
         {
-            var result = await _mediator.Send(new GetAllChallengesQuery());
-
-            if (!result.Success)
-                return NotFound();
-
-            return Ok(result.Value);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllActive()
-        {
-            var result = await _mediator.Send(new GetAllChallengesQuery { Active = true });
+            var result = await _mediator.Send(new GetAllChallengesQuery { Active = active ?? false });
 
             if (!result.Success)
                 return NotFound();

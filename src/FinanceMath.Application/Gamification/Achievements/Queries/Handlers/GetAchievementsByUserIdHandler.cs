@@ -7,11 +7,11 @@ namespace FinanceMath.Application.Gamification.Achievements.Queries.Handlers
 {
     public class GetAchievementsByUserIdHandler : IRequestHandler<GetAchievementsByUserIdQuery, Result<ICollection<AchievementDto>>>
     {
-        private readonly IAchievementProgressRepository _achievementProgressRepository;
+        private readonly IUserAchievementProgressRepository _achievementProgressRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public GetAchievementsByUserIdHandler(IAchievementProgressRepository achievementProgressRepository, IUserRepository userRepository, IMapper mapper)
+        public GetAchievementsByUserIdHandler(IUserAchievementProgressRepository achievementProgressRepository, IUserRepository userRepository, IMapper mapper)
         {
             _achievementProgressRepository = achievementProgressRepository;
             _userRepository = userRepository;

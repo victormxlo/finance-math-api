@@ -20,26 +20,33 @@ namespace FinanceMath.Application.Users.Commands.Handlers
 
         public async Task<Result<UserDto>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var data = request.Request;
-
-            var user = await _userRepository.GetByEmailAsync(data.Email);
-
-            if (user == null || !_passwordHasher.Verify(data.Password, user?.PasswordHash ?? string.Empty))
-                return Result<UserDto>.Fail("Invalid credentials.");
-
-            var token = _jwtProvider.GenerateToken(user!);
-
-            var dto = new UserDto
+            try
             {
-                Id = user!.Id,
-                Username = user.Username,
-                FullName = user.FullName,
-                Email = user.Email.Value,
-                CreatedAt = user.CreatedAt,
-                Token = token
-            };
+                var data = request.Request;
 
-            return Result<UserDto>.Ok(dto);
+                var user = await _userRepository.GetByEmailAsync(data.Email);
+
+                if (user == null || !_passwordHasher.Verify(data.Password, user?.PasswordHash ?? string.Empty))
+                    return Result<UserDto>.Fail("Invalid credentials.");
+
+                var token = _jwtProvider.GenerateToken(user!);
+
+                var dto = new UserDto
+                {
+                    Id = user!.Id,
+                    Username = user.Username,
+                    FullName = user.FullName,
+                    Email = user.Email.Value,
+                    CreatedAt = user.CreatedAt,
+                    Token = token
+                };
+
+                return Result<UserDto>.Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                return Result<UserDto>.Fail($"Failed to login user: {ex.Message}.");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FinanceMath.Application.Interfaces;
+using FinanceMath.Application.Services;
 using FinanceMath.Domain.Repositories;
 using FinanceMath.Infrastructure.Data;
 using FinanceMath.Infrastructure.Persistence.Repositories;
@@ -13,18 +14,21 @@ namespace FinanceMath.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAchievementRepository, AchievementRepository>();
+            services.AddScoped<IUserAchievementProgressRepository, UserAchievementProgressRepository>();
             services.AddScoped<IContentRepository, ContentRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IExerciseRepository, ExerciseRepository>();
+            services.AddScoped<IChallengeRepository, ChallengeRepository>();
             services.AddScoped<IContentSectionRepository, ContentSectionRepository>();
+            services.AddScoped<IExerciseRepository, ExerciseRepository>();
+            services.AddScoped<IGamificationService, GamificationService>();
             services.AddScoped<IGamificationProfileRepository, GamificationProfileRepository>();
             services.AddScoped<ILevelRepository, LevelRepository>();
-            services.AddScoped<IAchievementRepository, AchievementRepository>();
-            services.AddScoped<IChallengeRepository, ChallengeRepository>();
-            services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddSingleton<IJwtProvider, JwtProvider>();
-            services.AddScoped<IGamificationService, GamificationService>();
+            services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+            services.AddScoped<IRecommendationService, RecommendationService>();
+            services.AddScoped<IUserChallengeProgressRepository, UserChallengeProgressRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             var sessionFactory = NHibernateHelper.CreateSessionFactory(
                 configuration.GetConnectionString("FinanceMathDb")!);

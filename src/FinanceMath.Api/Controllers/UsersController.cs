@@ -1,3 +1,5 @@
+using FinanceMath.Api.Contracts.Requests;
+using FinanceMath.Application.Users.Commands;
 using FinanceMath.Application.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +9,7 @@ namespace FinanceMath.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,7 +20,6 @@ namespace FinanceMath.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetUserByIdQuery { Id = id });
@@ -28,7 +30,39 @@ namespace FinanceMath.Api.Controllers
             return Ok(result.Value);
         }
 
-        // PATCH updateUsername
-        // PATCH updatePassword
+        [HttpPatch("{id:guid}/change-username")]
+        public async Task<IActionResult> ChangeUsername(Guid id, [FromBody] ChangeUsernameRequest request)
+        {
+            ChangeUsernameCommand command = new ChangeUsernameCommand
+            {
+                Id = id,
+                NewUsername = request.NewUsername
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Success)
+                return BadRequest(new { error = result.Error });
+
+            return Ok(result.Value);
+        }
+
+        [HttpPatch("{id:guid}/change-password")]
+        public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangeUserPasswordRequest request)
+        {
+            ChangeUserPasswordCommand command = new ChangeUserPasswordCommand
+            {
+                Id = id,
+                CurrentPassword = request.CurrentPassword,
+                NewPassword = request.NewPassword
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Success)
+                return BadRequest(new { error = result.Error });
+
+            return Ok(result.Value);
+        }
     }
 }

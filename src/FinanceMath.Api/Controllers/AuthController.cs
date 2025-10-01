@@ -28,6 +28,7 @@ namespace FinanceMath.Api.Controllers
 
             return CreatedAtAction(
                 nameof(UsersController.GetById),
+                "Users",
                 new { id = result.Value!.Id },
                 result.Value);
         }

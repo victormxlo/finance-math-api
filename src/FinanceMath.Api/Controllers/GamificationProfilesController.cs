@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinanceMath.Api.Controllers
 {
     [ApiController]
-    [Route("api/gamification/profiles")]
+    [Route("api/[controller]")]
     [Authorize]
     public class GamificationProfilesController : ControllerBase
     {

@@ -25,32 +25,39 @@ namespace FinanceMath.Application.Users.Commands.Handlers
 
         public async Task<Result<UserDto>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var data = request.Request;
-
-            var existingUser = await _userRepository.GetByUsernameAsync(data.Username);
-
-            if (existingUser != null)
-                return Result<UserDto>.Fail("Username already exists.");
-
-            var hashedPassword = _passwordHasher.Hash(data.Password);
-
-            var email = new Email(data.Email);
-            var user = new User(data.Username, data.FullName, email, hashedPassword, UserType.Student);
-            await _userRepository.AddAsync(user);
-
-            var token = _jwtProvider.GenerateToken(user);
-
-            var dto = new UserDto
+            try
             {
-                Id = user.Id,
-                Username = user.Username,
-                FullName = user.FullName,
-                Email = user.Email.Value,
-                CreatedAt = user.CreatedAt,
-                Token = token
-            };
+                var data = request.Request;
 
-            return Result<UserDto>.Ok(dto);
+                var existingUser = await _userRepository.GetByUsernameAsync(data.Username);
+
+                if (existingUser != null)
+                    return Result<UserDto>.Fail("Username already exists.");
+
+                var hashedPassword = _passwordHasher.Hash(data.Password);
+
+                var email = new Email(data.Email);
+                var user = new User(data.Username, data.FullName, email, hashedPassword, UserType.Student);
+                await _userRepository.AddAsync(user);
+
+                var token = _jwtProvider.GenerateToken(user);
+
+                var dto = new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    FullName = user.FullName,
+                    Email = user.Email.Value,
+                    CreatedAt = user.CreatedAt,
+                    Token = token
+                };
+
+                return Result<UserDto>.Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                return Result<UserDto>.Fail($"Failed to register user: {ex.Message}.");
+            }
         }
     }
 }

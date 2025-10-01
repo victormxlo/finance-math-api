@@ -10,6 +10,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Table("exercises");
 
             Id(x => x.Id)
+                .CustomSqlType("uuid")
                 .GeneratedBy.GuidComb();
 
             Map(x => x.Question)

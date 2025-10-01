@@ -10,6 +10,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Table("content_sections");
 
             Id(x => x.Id)
+                .CustomSqlType("uuid")
                 .GeneratedBy.GuidComb();
 
             Map(x => x.Title)

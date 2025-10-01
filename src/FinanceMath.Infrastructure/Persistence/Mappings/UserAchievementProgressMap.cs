@@ -3,9 +3,9 @@ using FluentNHibernate.Mapping;
 
 namespace FinanceMath.Infrastructure.Persistence.Mappings
 {
-    public class AchievementProgressMap : ClassMap<AchievementProgress>
+    public class UserAchievementProgressMap : ClassMap<UserAchievementProgress>
     {
-        public AchievementProgressMap()
+        public UserAchievementProgressMap()
         {
             Table("achievement_progresses");
 
