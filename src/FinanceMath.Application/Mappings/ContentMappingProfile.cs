@@ -10,6 +10,8 @@ namespace FinanceMath.Application.Mappings
             CreateMap<Domain.ContentAggregate.Content, ContentDto>()
                 .ForMember(dest => dest.ExerciseIds,
                     opt => opt.MapFrom(src => src.ContentExercises.Select(e => e.Exercise.Id)))
+                .ForMember(dest => dest.SectionIds,
+                    opt => opt.MapFrom(src => src.Sections.Select(s => s.Id)))
                 .ReverseMap();
         }
     }
