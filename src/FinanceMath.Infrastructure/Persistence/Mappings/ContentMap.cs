@@ -48,11 +48,13 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             HasMany(x => x.ContentExercises)
                 .KeyColumn("content_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.Sections)
                 .KeyColumn("content_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
         }
     }

@@ -41,24 +41,28 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Table("achievement_progresses")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.CompletedContents)
                 .Table("user_content_progresses")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.CompletedExercises)
                 .Table("user_exercise_progresses")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.CompletedChallenges)
                 .Table("user_challenge_progress")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
         }
     }

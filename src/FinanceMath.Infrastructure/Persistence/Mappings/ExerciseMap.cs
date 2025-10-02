@@ -33,16 +33,19 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             HasMany(x => x.Options)
                 .KeyColumn("exercise_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.Hints)
                 .KeyColumn("exercise_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.ContentExercises)
                 .KeyColumn("exercise_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
         }
     }

@@ -22,11 +22,13 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             HasMany(x => x.Subcategories)
                 .KeyColumn("parent_category_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.AllDeleteOrphan();
 
             HasMany(x => x.Contents)
                 .KeyColumn("category_id")
                 .Inverse()
+                .AsSet()
                 .Cascade.None();
         }
     }
