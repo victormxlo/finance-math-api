@@ -10,7 +10,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Table("categories");
             Id(x => x.Id)
                 .CustomSqlType("uuid")
-                .GeneratedBy.GuidComb();
+                .GeneratedBy.Assigned();
             Map(x => x.Name)
                 .Not.Nullable();
 

@@ -10,7 +10,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
             Table("gamification_profiles");
             Id(x => x.Id)
                 .CustomSqlType("uuid")
-                .GeneratedBy.GuidComb();
+                .GeneratedBy.Assigned();
 
             Map(x => x.ExperiencePoints)
                 .Column("experience_points")

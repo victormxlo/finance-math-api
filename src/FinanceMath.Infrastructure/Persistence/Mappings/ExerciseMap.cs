@@ -11,7 +11,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
 
             Id(x => x.Id)
                 .CustomSqlType("uuid")
-                .GeneratedBy.GuidComb();
+                .GeneratedBy.Assigned();
 
             Map(x => x.Question)
                 .CustomSqlType("text")
@@ -25,9 +25,11 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Not.Nullable();
 
             Map(x => x.CreatedAt)
+                .Column("created_at")
                 .Not.Nullable();
 
             Map(x => x.UpdatedAt)
+                .Column("updated_at")
                 .Nullable();
 
             HasMany(x => x.Options)

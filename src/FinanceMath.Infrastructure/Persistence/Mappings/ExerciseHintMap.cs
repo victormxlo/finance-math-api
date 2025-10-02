@@ -11,7 +11,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
 
             Id(x => x.Id)
                 .CustomSqlType("uuid")
-                .GeneratedBy.GuidComb();
+                .GeneratedBy.Assigned();
 
             References(x => x.Exercise)
                 .Column("exercise_id")

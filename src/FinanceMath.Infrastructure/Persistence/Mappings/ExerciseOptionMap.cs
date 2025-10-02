@@ -10,7 +10,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
 
             Id(x => x.Id)
                 .CustomSqlType("uuid")
-                .GeneratedBy.GuidComb();
+                .GeneratedBy.Assigned();
 
             References(x => x.Exercise)
                 .Column("exercise_id")
@@ -26,6 +26,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Not.Nullable();
 
             Map(x => x.IsCorrect)
+                .Column("is_correct")
                 .Not.Nullable();
         }
     }
