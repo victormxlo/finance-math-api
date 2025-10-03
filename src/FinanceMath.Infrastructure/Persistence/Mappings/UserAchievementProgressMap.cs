@@ -7,7 +7,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
     {
         public UserAchievementProgressMap()
         {
-            Table("achievement_progresses");
+            Table("user_achievement_progresses");
 
             CompositeId()
                 .KeyReference(x => x.GamificationProfile, "gamification_profile_id")

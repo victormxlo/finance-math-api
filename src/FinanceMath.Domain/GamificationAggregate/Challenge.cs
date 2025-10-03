@@ -6,6 +6,7 @@
         public virtual string Name { get; protected set; }
         public virtual string Description { get; protected set; }
         public virtual string CriteriaKey { get; protected set; }
+        public virtual int Target { get; protected set; }
         public virtual int ExperienceReward { get; protected set; }
         public virtual int VirtualCurrencyReward { get; protected set; }
         public virtual DateTime StartDate { get; protected set; }
@@ -15,13 +16,14 @@
         protected Challenge() { }
 
         public Challenge(
-            string name, string description, string criteriaKey,
+            string name, string description, string criteriaKey, int target,
             int experienceReward, int virtualCurrencyReward, DateTime startDate, DateTime endDate)
         {
             Id = Guid.NewGuid();
             Name = name;
             Description = description;
             CriteriaKey = criteriaKey;
+            Target = target;
             ExperienceReward = experienceReward;
             VirtualCurrencyReward = virtualCurrencyReward;
             StartDate = startDate;
@@ -30,12 +32,13 @@
         }
 
         public virtual void Update(
-            string name, string description, string criteriaKey,
+            string name, string description, string criteriaKey, int target,
             int experienceReward, int virtualCurrencyReward, DateTime startDate, DateTime endDate)
         {
             Name = name;
             Description = description;
             CriteriaKey = criteriaKey;
+            Target = target;
             ExperienceReward = experienceReward;
             VirtualCurrencyReward = virtualCurrencyReward;
             StartDate = startDate;

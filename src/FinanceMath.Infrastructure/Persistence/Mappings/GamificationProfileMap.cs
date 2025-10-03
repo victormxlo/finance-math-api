@@ -38,7 +38,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Cascade.None();
 
             HasMany(x => x.Achievements)
-                .Table("achievement_progresses")
+                .Table("user_achievement_progresses")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()
                 .AsSet()
@@ -58,7 +58,7 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .AsSet()
                 .Cascade.AllDeleteOrphan();
 
-            HasMany(x => x.CompletedChallenges)
+            HasMany(x => x.ChallengeProgresses)
                 .Table("user_challenge_progress")
                 .KeyColumn("gamification_profile_id")
                 .Inverse()

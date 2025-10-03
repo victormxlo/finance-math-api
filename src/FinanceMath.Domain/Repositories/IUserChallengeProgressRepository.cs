@@ -4,8 +4,11 @@ namespace FinanceMath.Domain.Repositories
 {
     public interface IUserChallengeProgressRepository
     {
-        Task<ICollection<UserChallengeProgress>> GetByChallengeId(Guid challengeId);
-        Task<ICollection<UserChallengeProgress>> GetByGamificationProfileId(Guid gamificationProfileId);
-        Task<ICollection<UserChallengeProgress>> GetByUserId(Guid userId);
+        Task<ICollection<UserChallengeProgress>> GetByChallengeIdAsync(Guid challengeId);
+        Task<ICollection<UserChallengeProgress>> GetByGamificationProfileIdAsync(Guid gamificationProfileId);
+        Task<ICollection<UserChallengeProgress>> GetByUserIdAsync(Guid userId);
+        Task<UserChallengeProgress> GetByProfileAndChallengeAsync(Guid profileId, Guid challengeId);
+        Task SaveAsync(UserChallengeProgress progress);
+        Task UpdateAsync(UserChallengeProgress progress);
     }
 }

@@ -21,7 +21,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
                 .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
-                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
+                .FetchMany(p => p.ChallengeProgresses).ThenFetch(ap => ap.Challenge)
                 .Where(p => p.User.Id == userId)
                 .FirstOrDefaultAsync();
         }
@@ -33,7 +33,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
                 .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
-                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
+                .FetchMany(p => p.ChallengeProgresses).ThenFetch(ap => ap.Challenge)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -44,7 +44,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .FetchMany(p => p.CompletedContents)
                 .FetchMany(p => p.CompletedExercises)
                 .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
-                .FetchMany(p => p.CompletedChallenges).ThenFetch(ap => ap.Challenge)
+                .FetchMany(p => p.ChallengeProgresses).ThenFetch(ap => ap.Challenge)
                 .Where(gp => gp.Level.Id == levelId)
                 .ToListAsync();
         }

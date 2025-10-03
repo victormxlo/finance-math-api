@@ -14,12 +14,16 @@ namespace FinanceMath.Application.Mappings
             CreateMap<GamificationProfile, GamificationProfileDto>()
                 .ForMember(dest => dest.UserId,
                     opt => opt.MapFrom(src => src.User.Id))
+                .ForMember(dest => dest.Username,
+                    opt => opt.MapFrom(src => src.User.Username))
                 .ForMember(dest => dest.LevelId,
                     opt => opt.MapFrom(src => src.Level.Id))
+                .ForMember(dest => dest.LevelName,
+                    opt => opt.MapFrom(src => src.Level.Name))
                 .ForMember(dest => dest.AchievementsIds,
                     opt => opt.MapFrom(src => src.Achievements.Select(a => a.Achievement.Id)))
-                .ForMember(dest => dest.ChallengesIds,
-                    opt => opt.MapFrom(src => src.CompletedChallenges.Select(c => c.Challenge.Id)));
+                .ForMember(dest => dest.ChallengeProgressesIds,
+                    opt => opt.MapFrom(src => src.ChallengeProgresses.Select(c => c.Challenge.Id)));
 
             CreateMap<Level, LevelDto>()
                 .ReverseMap();

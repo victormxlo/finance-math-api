@@ -4,15 +4,37 @@
     {
         public virtual GamificationProfile GamificationProfile { get; protected set; }
         public virtual Challenge Challenge { get; protected set; }
-        public virtual DateTime CompletedAt { get; protected set; }
+
+        public virtual int CurrentProgress { get; protected set; }
+        public virtual int TargetProgress { get; protected set; }
+        public virtual bool IsCompleted { get; protected set; }
+
+        public virtual DateTime StartedAt { get; protected set; }
+        public virtual DateTime? CompletedAt { get; protected set; }
 
         protected UserChallengeProgress() { }
 
-        public UserChallengeProgress(GamificationProfile gamificationProfile, Challenge challenge, DateTime completedAt)
+        public UserChallengeProgress(GamificationProfile profile, Challenge challenge)
         {
-            GamificationProfile = gamificationProfile;
+            GamificationProfile = profile;
             Challenge = challenge;
-            CompletedAt = completedAt;
+            TargetProgress = challenge.Target;
+            CurrentProgress = 0;
+            IsCompleted = false;
+            StartedAt = DateTime.UtcNow;
+        }
+
+        public virtual void IncrementProgress(int amount = 1)
+        {
+            if (IsCompleted) return;
+
+            CurrentProgress += amount;
+            if (CurrentProgress >= TargetProgress)
+            {
+                CurrentProgress = TargetProgress;
+                IsCompleted = true;
+                CompletedAt = DateTime.UtcNow;
+            }
         }
 
         public override bool Equals(object obj)

@@ -17,7 +17,7 @@ namespace FinanceMath.Domain.GamificationAggregate
         public virtual ICollection<UserExerciseProgress> CompletedExercises { get; protected set; } = new List<UserExerciseProgress>();
         public virtual ICollection<UserContentProgress> CompletedContents { get; protected set; } = new List<UserContentProgress>();
         public virtual ICollection<UserAchievementProgress> Achievements { get; protected set; } = new List<UserAchievementProgress>();
-        public virtual ICollection<UserChallengeProgress> CompletedChallenges { get; protected set; } = new List<UserChallengeProgress>();
+        public virtual ICollection<UserChallengeProgress> ChallengeProgresses { get; protected set; } = new List<UserChallengeProgress>();
 
         protected GamificationProfile() { }
 
@@ -79,15 +79,20 @@ namespace FinanceMath.Domain.GamificationAggregate
                 CompletedContents.Add(new UserContentProgress(this, content, completedAt));
         }
 
-        public virtual bool HasCompletedChallenge(Guid challengeId)
+        public virtual UserChallengeProgress GetOrCreateChallengeProgress(Challenge challenge)
         {
-            return CompletedChallenges.Any(c => c.Challenge.Id == challengeId);
+            var progress = ChallengeProgresses.FirstOrDefault(p => p.Challenge.Id == challenge.Id);
+
+            if (progress == null)
+            {
+                progress = new UserChallengeProgress(this, challenge);
+                ChallengeProgresses.Add(progress);
+            }
+
+            return progress;
         }
 
-        public virtual void MarkChallengeCompleted(Challenge challenge, DateTime completedAt)
-        {
-            if (!HasCompletedChallenge(challenge.Id))
-                CompletedChallenges.Add(new UserChallengeProgress(this, challenge, completedAt));
-        }
+        public virtual bool HasCompletedChallenge(Guid challengeId)
+            => ChallengeProgresses.Any(cp => cp.Challenge.Id == challengeId && cp.IsCompleted);
     }
 }

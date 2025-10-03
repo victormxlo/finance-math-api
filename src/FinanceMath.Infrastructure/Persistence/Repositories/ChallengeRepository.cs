@@ -32,6 +32,15 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             return await _session.Query<Challenge>().ToListAsync();
         }
 
+        public async Task<ICollection<Challenge>> GetActiveChallengesByCriteriaAsync(string criteriaKey, DateTime currentDate)
+        {
+            return await _session.Query<Challenge>()
+                .Where(c => c.CriteriaKey == criteriaKey
+                     && c.StartDate <= currentDate
+                     && c.EndDate >= currentDate)
+                .ToListAsync();
+        }
+
         public async Task SaveAsync(Challenge challenge)
         {
             using var tx = _session.BeginTransaction();

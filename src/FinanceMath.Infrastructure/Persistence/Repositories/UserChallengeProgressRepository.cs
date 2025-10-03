@@ -14,7 +14,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
-        public async Task<ICollection<UserChallengeProgress>> GetByChallengeId(Guid challengeId)
+        public async Task<ICollection<UserChallengeProgress>> GetByChallengeIdAsync(Guid challengeId)
         {
             return await _session.Query<UserChallengeProgress>()
                 .Fetch(ap => ap.GamificationProfile)
@@ -23,7 +23,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<UserChallengeProgress>> GetByGamificationProfileId(Guid gamificationProfileId)
+        public async Task<ICollection<UserChallengeProgress>> GetByGamificationProfileIdAsync(Guid gamificationProfileId)
         {
             return await _session.Query<UserChallengeProgress>()
                 .Fetch(ap => ap.GamificationProfile)
@@ -32,13 +32,33 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<UserChallengeProgress>> GetByUserId(Guid userId)
+        public async Task<UserChallengeProgress> GetByProfileAndChallengeAsync(Guid profileId, Guid challengeId)
+        {
+            return await _session.Query<UserChallengeProgress>()
+                .FirstOrDefaultAsync(p => p.GamificationProfile.Id == profileId && p.Challenge.Id == challengeId);
+        }
+
+        public async Task<ICollection<UserChallengeProgress>> GetByUserIdAsync(Guid userId)
         {
             return await _session.Query<UserChallengeProgress>()
                 .Fetch(ap => ap.GamificationProfile)
                 .Fetch(ap => ap.Challenge)
                 .Where(ap => ap.GamificationProfile.User.Id == userId)
                 .ToListAsync();
+        }
+
+        public async Task SaveAsync(UserChallengeProgress progress)
+        {
+            using var tx = _session.BeginTransaction();
+            await _session.SaveAsync(progress);
+            await tx.CommitAsync();
+        }
+
+        public async Task UpdateAsync(UserChallengeProgress progress)
+        {
+            using var tx = _session.BeginTransaction();
+            await _session.UpdateAsync(progress);
+            await tx.CommitAsync();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace FinanceMath.Application.Gamification.Challenges.Commands.Handlers
             try
             {
                 Challenge challenge = new Challenge(
-                    request.Name, request.Description, request.CriteriaKey,
+                    request.Name, request.Description, request.CriteriaKey, request.Target,
                     request.ExperienceReward, request.VirtualCurrencyReward,
                     request.StartDate, request.EndDate);
 

@@ -27,6 +27,10 @@ namespace FinanceMath.Infrastructure.Persistence.Mappings
                 .Length(100)
                 .Not.Nullable();
 
+            Map(x => x.Target)
+                .Column("target")
+                .Not.Nullable();
+
             Map(x => x.ExperienceReward)
                 .Column("experience_reward")
                 .Not.Nullable();

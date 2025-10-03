@@ -26,7 +26,7 @@ namespace FinanceMath.Application.Gamification.Challenges.Commands.Handlers
                     return Result<ChallengeDto>.Fail($"Challenge not found with id: {request.Id}.");
 
                 challenge.Update(
-                    request.Name, request.Description, request.CriteriaKey,
+                    request.Name, request.Description, request.CriteriaKey, request.Target,
                     request.ExperienceReward, request.VirtualCurrencyReward,
                     request.StartDate, request.EndDate);
 
