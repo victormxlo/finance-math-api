@@ -79,7 +79,7 @@ namespace FinanceMath.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id:guid}")]
+        [HttpPost("{id:guid}/validate-answer")]
         public async Task<IActionResult> ValidateAnswer(Guid id, ValidateExerciseAnswerRequest request)
         {
             var command = await _mediator
