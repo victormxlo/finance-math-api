@@ -600,6 +600,11 @@ namespace FinanceMath.Infrastructure.Services
                         shouldUnlock = profile.CompletedExercises.Count >= n;
                     }
                 }
+                else if (key.StartsWith("complete_n_contents:", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (int.TryParse(key.Split(':', 2)[1], out var n))
+                        shouldUnlock = profile.CompletedContents.Count >= n;
+                }
                 else if (key.StartsWith("streak_days:", StringComparison.OrdinalIgnoreCase))
                 {
                     if (int.TryParse(key.Split(':', 2)[1], out var days))
