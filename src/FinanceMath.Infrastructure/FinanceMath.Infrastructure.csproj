@@ -21,4 +21,8 @@
     <ProjectReference Include="..\FinanceMath.Domain\FinanceMath.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Scripts\" />
+  </ItemGroup>
+
 </Project>
