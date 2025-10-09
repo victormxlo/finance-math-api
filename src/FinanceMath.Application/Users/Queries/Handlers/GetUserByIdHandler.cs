@@ -1,6 +1,7 @@
 ﻿using FinanceMath.Application.Interfaces;
 using FinanceMath.Application.Users.Dtos;
 using FinanceMath.Domain.Repositories;
+using FinanceMath.Domain.Users.Enums;
 using MediatR;
 
 namespace FinanceMath.Application.Users.Queries.Handlers
@@ -28,6 +29,7 @@ namespace FinanceMath.Application.Users.Queries.Handlers
                 Username = user.Username,
                 FullName = user.FullName,
                 Email = user.Email.Value,
+                Type = Enum.GetName<UserType>(user.Type)!,
                 CreatedAt = user.CreatedAt
             };
 

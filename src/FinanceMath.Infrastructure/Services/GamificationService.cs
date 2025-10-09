@@ -393,13 +393,6 @@ namespace FinanceMath.Infrastructure.Services
             return profile;
         }
 
-        private void ApplyReward(GamificationProfile profile, int xp, int currency)
-        {
-            if (xp > 0) profile.AddExperience(xp);
-            if (currency != 0) profile.AddVirtualCurrency(currency);
-            profile.UpdateStreak(DateTime.UtcNow);
-        }
-
         private async Task UpdateChallengeProgressForExerciseAsync(GamificationProfile profile, Exercise exercise)
         {
             var activeChallenges = await _challengeRepository.GetActivesAsync();
@@ -637,70 +630,6 @@ namespace FinanceMath.Infrastructure.Services
         #endregion
 
         #region Mappings 
-
-        private CompleteExerciseResponseDto MapToCompleteExerciseDto(
-        GamificationProfile profile,
-        Exercise exercise,
-        int xpAwarded,
-        int currencyAwarded,
-        bool isCorrect,
-        bool usedHint,
-        bool alreadyCompleted,
-        IEnumerable<Achievement> unlockedAchievements,
-        DateTime completedAtUtc)
-        {
-            var dto = new CompleteExerciseResponseDto
-            {
-                ExerciseId = exercise.Id,
-                IsCorrect = isCorrect,
-                UsedHint = usedHint,
-                Explanation = exercise.Explanation,
-                AlreadyCompleted = alreadyCompleted,
-                CompletedAtUtc = completedAtUtc,
-                Reward = new RewardDto { XpAwarded = xpAwarded, VirtualCurrencyAwarded = currencyAwarded },
-                Profile = MapProfileToSummary(profile),
-                AchievementsUnlocked = unlockedAchievements.Select(a => new UserAchievementDto
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Description = a.Description,
-                    ExperienceReward = a.ExperienceReward,
-                    VirtualCurrencyReward = a.VirtualCurrencyReward,
-                    UnlockedAt = DateTime.UtcNow
-                }).ToList()
-            };
-
-            return dto;
-        }
-
-        private CompleteContentResponseDto MapToCompleteContentDto(
-            GamificationProfile profile,
-            Content content,
-            int xpAwarded,
-            int currencyAwarded,
-            IEnumerable<Achievement> unlockedAchievements,
-            DateTime completedAtUtc)
-        {
-            var dto = new CompleteContentResponseDto
-            {
-                ContentId = content.Id,
-                ModuleCompleted = content.IsLastInModule,
-                CompletedAtUtc = completedAtUtc,
-                Reward = new RewardDto { XpAwarded = xpAwarded, VirtualCurrencyAwarded = currencyAwarded },
-                Profile = MapProfileToSummary(profile),
-                AchievementsUnlocked = unlockedAchievements.Select(a => new UserAchievementDto
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Description = a.Description,
-                    ExperienceReward = a.ExperienceReward,
-                    VirtualCurrencyReward = a.VirtualCurrencyReward,
-                    UnlockedAt = DateTime.UtcNow
-                }).ToList()
-            };
-
-            return dto;
-        }
 
         private GamificationProfileSummaryDto MapProfileToSummary(GamificationProfile profile)
         {

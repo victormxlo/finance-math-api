@@ -36,8 +36,11 @@ namespace FinanceMath.Application.Users.Commands.Handlers
 
                 var hashedPassword = _passwordHasher.Hash(data.Password);
 
+                var type = data.Type == (int)UserType.Admin ?
+                    UserType.Admin : UserType.Student;
+
                 var email = new Email(data.Email);
-                var user = new User(data.Username, data.FullName, email, hashedPassword, UserType.Student);
+                var user = new User(data.Username, data.FullName, email, hashedPassword, type);
                 await _userRepository.AddAsync(user);
 
                 var token = _jwtProvider.GenerateToken(user);
@@ -48,6 +51,7 @@ namespace FinanceMath.Application.Users.Commands.Handlers
                     Username = user.Username,
                     FullName = user.FullName,
                     Email = user.Email.Value,
+                    Type = Enum.GetName<UserType>(user.Type)!,
                     CreatedAt = user.CreatedAt,
                     Token = token
                 };
