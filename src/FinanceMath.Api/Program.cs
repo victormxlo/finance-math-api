@@ -28,6 +28,20 @@ internal class Program
 
         #endregion
 
+        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("ConfiguredCorsPolicy",
+                policy =>
+                {
+                    policy.WithOrigins(allowedOrigins!)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                }
+                );
+        });
+
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -90,6 +104,8 @@ internal class Program
         {
             app.MapOpenApi();
         }
+
+        app.UseCors("ConfiguredCorsPolicy");
 
         app.UseAuthentication();
         app.UseAuthorization();
