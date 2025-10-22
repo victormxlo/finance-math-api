@@ -27,7 +27,7 @@ namespace FinanceMath.Application.Gamification.Achievements.Queries.Handlers
                 if (user == null)
                     return Result<ICollection<AchievementDto>>.Fail($"User not found with id: {request.UserId}.");
 
-                var achievementProgresses = await _achievementProgressRepository.GetByUserId(user.Id);
+                var achievementProgresses = await _achievementProgressRepository.GetByUserIdAsync(user.Id);
 
                 var achievements = achievementProgresses.Select(ap => ap.Achievement);
 

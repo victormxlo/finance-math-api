@@ -166,11 +166,16 @@ namespace FinanceMath.Infrastructure.Services
                 }).ToList(),
                 ChallengesProgress = activeChallengesProgress.Select(p => new UserChallengeProgressDto
                 {
+                    ProfileId = p.GamificationProfile.Id,
+                    UserId = p.GamificationProfile.User.Id,
                     ChallengeId = p.Challenge.Id,
-                    Name = p.Challenge.Name,
+                    ChallengeName = p.Challenge.Name,
+                    CriteriaKey = p.Challenge.CriteriaKey,
                     CurrentProgress = p.CurrentProgress,
                     TargetProgress = p.TargetProgress,
-                    IsCompleted = p.IsCompleted
+                    IsCompleted = p.IsCompleted,
+                    StartedAt = p.StartedAt,
+                    CompletedAt = p.IsCompleted ? p.CompletedAt : null
                 }).ToList()
             };
 
@@ -260,11 +265,16 @@ namespace FinanceMath.Infrastructure.Services
                 }).ToList(),
                 ChallengesProgress = activeChallengesProgress.Select(p => new UserChallengeProgressDto
                 {
+                    ProfileId = p.GamificationProfile.Id,
+                    UserId = p.GamificationProfile.User.Id,
                     ChallengeId = p.Challenge.Id,
-                    Name = p.Challenge.Name,
+                    ChallengeName = p.Challenge.Name,
+                    CriteriaKey = p.Challenge.CriteriaKey,
                     CurrentProgress = p.CurrentProgress,
                     TargetProgress = p.TargetProgress,
-                    IsCompleted = p.IsCompleted
+                    IsCompleted = p.IsCompleted,
+                    StartedAt = p.StartedAt,
+                    CompletedAt = p.IsCompleted ? p.CompletedAt : null
                 }).ToList()
             };
 

@@ -96,6 +96,17 @@ namespace FinanceMath.Api.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpGet("{userId:guid}/progress")]
+        public async Task<IActionResult> GetProgress(Guid userId)
+        {
+            var result = await _mediator.Send(new GetUserContentProgressQuery { UserId = userId });
+
+            if (!result.Success)
+                return NotFound();
+
+            return Ok(result.Value);
+        }
         #endregion
 
         #region Content Sections

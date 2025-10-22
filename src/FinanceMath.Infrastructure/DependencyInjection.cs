@@ -15,7 +15,6 @@ namespace FinanceMath.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAchievementRepository, AchievementRepository>();
-            services.AddScoped<IUserAchievementProgressRepository, UserAchievementProgressRepository>();
             services.AddScoped<IContentRepository, ContentRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IChallengeRepository, ChallengeRepository>();
@@ -27,7 +26,10 @@ namespace FinanceMath.Infrastructure
             services.AddSingleton<IJwtProvider, JwtProvider>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddScoped<IRecommendationService, RecommendationService>();
+            services.AddScoped<IUserAchievementProgressRepository, UserAchievementProgressRepository>();
             services.AddScoped<IUserChallengeProgressRepository, UserChallengeProgressRepository>();
+            services.AddScoped<IUserContentProgressRepository, UserContentProgressRepository>();
+            services.AddScoped<IUserExerciseProgressRepository, UserExerciseProgressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             var sessionFactory = NHibernateHelper.CreateSessionFactory(

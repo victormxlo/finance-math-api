@@ -6,6 +6,6 @@ namespace FinanceMath.Domain.Repositories
     {
         Task<ICollection<UserAchievementProgress>> GetByAchievementId(Guid achievementId);
         Task<ICollection<UserAchievementProgress>> GetByGamificationProfileId(Guid gamificationProfileId);
-        Task<ICollection<UserAchievementProgress>> GetByUserId(Guid userId);
+        Task<ICollection<UserAchievementProgress>> GetByUserIdAsync(Guid userId);
     }
 }

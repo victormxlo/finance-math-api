@@ -114,6 +114,17 @@ namespace FinanceMath.Api.Controllers
         }
         #endregion
 
+        [HttpGet("{userId:guid}/progress")]
+        public async Task<IActionResult> GetProgress(Guid userId)
+        {
+            var result = await _mediator.Send(new GetUserExerciseProgressQuery { UserId = userId });
+
+            if (!result.Success)
+                return NotFound();
+
+            return Ok(result.Value);
+        }
+
         #region Hints
         [HttpGet("{id:guid}/hints")]
         public async Task<IActionResult> GetHintsByExerciseId(Guid id)

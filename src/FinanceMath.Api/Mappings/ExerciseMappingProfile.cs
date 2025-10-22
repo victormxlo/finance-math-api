@@ -4,9 +4,9 @@ using FinanceMath.Application.Content.Exercises.Dtos;
 
 namespace FinanceMath.Api.Mappings
 {
-    public class ExercisesMappingProfile : Profile
+    public class ExerciseMappingProfile : Profile
     {
-        public ExercisesMappingProfile()
+        public ExerciseMappingProfile()
         {
             CreateMap<ValidateExerciseAnswerDto, ValidateExerciseAnswerResponse>();
         }

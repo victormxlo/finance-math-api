@@ -32,7 +32,7 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<UserAchievementProgress>> GetByUserId(Guid userId)
+        public async Task<ICollection<UserAchievementProgress>> GetByUserIdAsync(Guid userId)
         {
             return await _session.Query<UserAchievementProgress>()
                 .Fetch(ap => ap.GamificationProfile)

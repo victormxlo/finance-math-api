@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FinanceMath.Application.Content.Exercises.Dtos;
 using FinanceMath.Domain.ContentAggregate;
+using FinanceMath.Domain.GamificationAggregate;
 
 namespace FinanceMath.Application.Mappings
 {
@@ -23,6 +24,16 @@ namespace FinanceMath.Application.Mappings
                 .ForMember(dest => dest.ExerciseId,
                     opt => opt.MapFrom(src => src.Exercise.Id))
                 .ReverseMap();
+
+            CreateMap<UserExerciseProgress, UserExerciseProgressDto>()
+                .ForMember(dest => dest.ProfileId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.Id))
+                .ForMember(dest => dest.UserId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.User.Id))
+                .ForMember(dest => dest.ExerciseId,
+                    opt => opt.MapFrom(src => src.Exercise.Id))
+                .ForMember(dest => dest.ExerciseQuestion,
+                    opt => opt.MapFrom(src => src.Exercise.Question));
         }
     }
 }

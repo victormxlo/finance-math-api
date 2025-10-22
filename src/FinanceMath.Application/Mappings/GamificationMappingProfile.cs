@@ -31,6 +31,30 @@ namespace FinanceMath.Application.Mappings
             CreateMap<Achievement, AchievementDto>()
                 .ReverseMap();
 
+            CreateMap<UserAchievementProgress, UserAchievementProgressDto>()
+                .ForMember(dest => dest.ProfileId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.Id))
+                .ForMember(dest => dest.UserId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.User.Id))
+                .ForMember(dest => dest.AchievementId,
+                    opt => opt.MapFrom(src => src.Achievement.Id))
+                .ForMember(dest => dest.AchievementName,
+                    opt => opt.MapFrom(src => src.Achievement.Name))
+                .ForMember(dest => dest.CriteriaKey,
+                    opt => opt.MapFrom(src => src.Achievement.CriteriaKey));
+
+            CreateMap<UserChallengeProgress, UserChallengeProgressDto>()
+                .ForMember(dest => dest.ProfileId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.Id))
+                .ForMember(dest => dest.UserId,
+                    opt => opt.MapFrom(src => src.GamificationProfile.User.Id))
+                .ForMember(dest => dest.ChallengeId,
+                    opt => opt.MapFrom(src => src.Challenge.Id))
+                .ForMember(dest => dest.ChallengeName,
+                    opt => opt.MapFrom(src => src.Challenge.Name))
+                .ForMember(dest => dest.CriteriaKey,
+                    opt => opt.MapFrom(src => src.Challenge.CriteriaKey));
+
             CreateMap<Challenge, ChallengeDto>()
                 .ReverseMap();
         }

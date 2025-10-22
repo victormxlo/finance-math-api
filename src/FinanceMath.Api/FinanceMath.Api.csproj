@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Responses\" />
-    <Folder Include="Mappings\" />
   </ItemGroup>
 
 </Project>
