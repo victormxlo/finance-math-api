@@ -31,6 +31,7 @@ namespace FinanceMath.Infrastructure
             services.AddScoped<IUserContentProgressRepository, UserContentProgressRepository>();
             services.AddScoped<IUserExerciseProgressRepository, UserExerciseProgressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IReportService, ReportService>();
 
             var sessionFactory = NHibernateHelper.CreateSessionFactory(
                 configuration.GetConnectionString("FinanceMathDb")!);

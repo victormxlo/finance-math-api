@@ -52,6 +52,8 @@ namespace FinanceMath.Application.Mappings
                     opt => opt.MapFrom(src => src.Challenge.Id))
                 .ForMember(dest => dest.ChallengeName,
                     opt => opt.MapFrom(src => src.Challenge.Name))
+                .ForMember(dest => dest.ChallengeDescription,
+                    opt => opt.MapFrom(src => src.Challenge.Description))
                 .ForMember(dest => dest.CriteriaKey,
                     opt => opt.MapFrom(src => src.Challenge.CriteriaKey));
 

@@ -14,6 +14,14 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
+        public async Task<ICollection<GamificationProfile>> GetAllAsync()
+            => await _session.Query<GamificationProfile>()
+                .FetchMany(p => p.CompletedContents)
+                .FetchMany(p => p.CompletedExercises)
+                .FetchMany(p => p.Achievements).ThenFetch(ap => ap.Achievement)
+                .FetchMany(p => p.ChallengeProgresses).ThenFetch(ap => ap.Challenge)
+                .ToListAsync();
+
         public async Task<GamificationProfile> GetByUserIdAsync(Guid userId)
         {
             return await _session.Query<GamificationProfile>()

@@ -14,6 +14,14 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
+        public async Task<ICollection<UserAchievementProgress>> GetAllAsync()
+        {
+            return await _session.Query<UserAchievementProgress>()
+                .Fetch(ap => ap.GamificationProfile)
+                .Fetch(ap => ap.Achievement)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<UserAchievementProgress>> GetByAchievementId(Guid achievementId)
         {
             return await _session.Query<UserAchievementProgress>()

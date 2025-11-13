@@ -14,6 +14,12 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
+        public async Task<ICollection<User>> GetAllAsync()
+        {
+            return await _session.Query<User>()
+                .ToListAsync();
+        }
+
         public async Task<User?> GetByEmailAsync(string email)
             => await _session.Query<User>()
                 .FirstOrDefaultAsync(u => u.Email.Value == email);

@@ -14,21 +14,29 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
+        public async Task<ICollection<UserExerciseProgress>> GetAllAsync()
+        {
+            return await _session.Query<UserExerciseProgress>()
+                .Fetch(ep => ep.GamificationProfile)
+                .Fetch(ep => ep.Exercise)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<UserExerciseProgress>> GetByExerciseIdAsync(Guid exerciseId)
         {
             return await _session.Query<UserExerciseProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Exercise)
-                .Where(ap => ap.Exercise.Id == exerciseId)
+                .Fetch(ep => ep.GamificationProfile)
+                .Fetch(ep => ep.Exercise)
+                .Where(ep => ep.Exercise.Id == exerciseId)
                 .ToListAsync();
         }
 
         public async Task<ICollection<UserExerciseProgress>> GetByGamificationProfileIdAsync(Guid gamificationProfileId)
         {
             return await _session.Query<UserExerciseProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Exercise)
-                .Where(ap => ap.GamificationProfile.Id == gamificationProfileId)
+                .Fetch(ep => ep.GamificationProfile)
+                .Fetch(ep => ep.Exercise)
+                .Where(ep => ep.GamificationProfile.Id == gamificationProfileId)
                 .ToListAsync();
         }
 
@@ -41,10 +49,20 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
         public async Task<ICollection<UserExerciseProgress>> GetByUserIdAsync(Guid userId)
         {
             return await _session.Query<UserExerciseProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Exercise)
-                .Where(ap => ap.GamificationProfile.User.Id == userId)
+                .Fetch(ep => ep.GamificationProfile)
+                .Fetch(ep => ep.Exercise)
+                .Where(ep => ep.GamificationProfile.User.Id == userId)
                 .ToListAsync();
+        }
+
+        public async Task<int> CountByIdAsync(Guid exerciseId)
+        {
+            var data = await _session.Query<UserExerciseProgress>()
+                .Fetch(ep => ep.GamificationProfile)
+                .Fetch(ep => ep.Exercise)
+                .ToListAsync();
+
+            return data.Count;
         }
 
         public async Task SaveAsync(UserExerciseProgress progress)

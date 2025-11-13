@@ -14,21 +14,38 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
             _session = session;
         }
 
+        public async Task<ICollection<UserChallengeProgress>> GetAllAsync()
+        {
+            return await _session.Query<UserChallengeProgress>()
+                .Fetch(cp => cp.GamificationProfile)
+                .Fetch(cp => cp.Challenge)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<UserChallengeProgress>> GetByChallengeIdAsync(Guid challengeId)
         {
             return await _session.Query<UserChallengeProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Challenge)
-                .Where(ap => ap.Challenge.Id == challengeId)
+                .Fetch(cp => cp.GamificationProfile)
+                .Fetch(cp => cp.Challenge)
+                .Where(cp => cp.Challenge.Id == challengeId)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<UserChallengeProgress>> GetAllByProfileIdsAsync(ICollection<Guid> profileIds)
+        {
+            return await _session.Query<UserChallengeProgress>()
+                .Fetch(cp => cp.GamificationProfile)
+                .Fetch(cp => cp.Challenge)
+                .Where(cp => profileIds.Contains(cp.GamificationProfile.Id))
                 .ToListAsync();
         }
 
         public async Task<ICollection<UserChallengeProgress>> GetByGamificationProfileIdAsync(Guid gamificationProfileId)
         {
             return await _session.Query<UserChallengeProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Challenge)
-                .Where(ap => ap.GamificationProfile.Id == gamificationProfileId)
+                .Fetch(cp => cp.GamificationProfile)
+                .Fetch(cp => cp.Challenge)
+                .Where(cp => cp.GamificationProfile.Id == gamificationProfileId)
                 .ToListAsync();
         }
 
@@ -41,9 +58,9 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
         public async Task<ICollection<UserChallengeProgress>> GetByUserIdAsync(Guid userId)
         {
             return await _session.Query<UserChallengeProgress>()
-                .Fetch(ap => ap.GamificationProfile)
-                .Fetch(ap => ap.Challenge)
-                .Where(ap => ap.GamificationProfile.User.Id == userId)
+                .Fetch(cp => cp.GamificationProfile)
+                .Fetch(cp => cp.Challenge)
+                .Where(cp => cp.GamificationProfile.User.Id == userId)
                 .ToListAsync();
         }
 

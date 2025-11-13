@@ -6,6 +6,7 @@
         public Guid UserId { get; set; }
         public Guid ChallengeId { get; set; }
         public string ChallengeName { get; set; } = string.Empty;
+        public required string ChallengeDescription = string.Empty;
         public required string CriteriaKey { get; set; }
         public int CurrentProgress { get; set; }
         public int TargetProgress { get; set; }

@@ -4,6 +4,7 @@ namespace FinanceMath.Domain.Repositories
 {
     public interface IGamificationProfileRepository
     {
+        Task<ICollection<GamificationProfile>> GetAllAsync();
         Task<GamificationProfile> GetByUserIdAsync(Guid userId);
         Task<GamificationProfile> GetByIdAsync(Guid id);
         Task<ICollection<GamificationProfile>> GetByLevelIdAsync(int levelId);
