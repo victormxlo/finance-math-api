@@ -22,11 +22,19 @@ namespace FinanceMath.Infrastructure.Persistence.Repositories
                 .ToListAsync();
 
         public async Task<Content?> GetByIdAsync(Guid id)
-            => await _session.Query<Content>()
+        {
+            var content = await _session.Query<Content>()
+                .Where(c => c.Id == id)
                 .Fetch(c => c.Category)
-                .FetchMany(c => c.Sections)
-                .FetchMany(c => c.ContentExercises)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync();
+
+            if (content == null) return null;
+
+            NHibernateUtil.Initialize(content.Sections);
+            NHibernateUtil.Initialize(content.ContentExercises);
+
+            return content;
+        }
 
         public async Task SaveAsync(Content content)
         {

@@ -197,7 +197,6 @@ CREATE TABLE user_achievement_progresses (
     ON DELETE CASCADE
 );
 
-
 CREATE TABLE challenges (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
